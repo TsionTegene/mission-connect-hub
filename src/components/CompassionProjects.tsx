@@ -1,6 +1,6 @@
 
 import { useRef } from "react";
-import { Droplet, Home, Heart, Utensils, BookOpen } from "lucide-react";
+import { Droplet, Home, Heart, Utensils, BookOpen, Baby, Dog, Sprout, Speech } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -8,37 +8,45 @@ import { cn } from "@/lib/utils";
 const CompassionProjects = () => {
   const projects = [
     {
-      icon: <Droplet className="h-6 w-6 text-primary" />,
-      title: "Clean Water Initiative",
-      description: "Providing clean water wells and sanitation education to communities lacking access to safe drinking water.",
+      icon: <Baby className="h-6 w-6 text-primary" />,
+      title: "Children Ministry",
+      description:
+        "Providing clean water wells and sanitation education to communities lacking access to safe drinking water.",
       stat: "27",
       statLabel: "Wells Completed",
-      image: "https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?auto=format&fit=crop&w=800&q=80"
+      image:
+        "https://images.unsplash.com/photo-1476234251651-f353703a034d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGNoaWxkcmVufGVufDB8fDB8fHww",
     },
     {
-      icon: <Home className="h-6 w-6 text-primary" />,
-      title: "Housing Project",
-      description: "Building sustainable housing for families living in unsafe or inadequate shelter conditions.",
+      icon: <Dog className="h-6 w-6 text-primary" />,
+      title: "Veternary Services",
+      description:
+        "Building sustainable housing for families living in unsafe or inadequate shelter conditions.",
       stat: "142",
       statLabel: "Homes Built",
-      image: "https://images.unsplash.com/photo-1466721591366-2d5fba72006d?auto=format&fit=crop&w=800&q=80"
+      image:
+        "https://plus.unsplash.com/premium_photo-1661881918680-a3b2519f0298?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE2fHx8ZW58MHx8fHx8",
     },
     {
-      icon: <Utensils className="h-6 w-6 text-primary" />,
-      title: "Food Security Program",
-      description: "Combating hunger through sustainable agriculture training, food distribution, and nutrition education.",
+      icon: <Sprout className="h-6 w-6 text-primary" />,
+      title: "Agriculture and Health Advices",
+      description:
+        "Combating hunger through sustainable agriculture training, food distribution, and nutrition education.",
       stat: "1,200+",
       statLabel: "Families Supported",
-      image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80"
+      image:
+        "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGFncmljdWx0dXJlfGVufDB8fDB8fHww",
     },
     {
-      icon: <BookOpen className="h-6 w-6 text-primary" />,
-      title: "Education Access",
-      description: "Supporting children's education through school construction, teacher training, and educational resources.",
+      icon: <Speech className="h-6 w-6 text-primary" />,
+      title: "Testimony and Success Stories",
+      description:
+        "Supporting children's education through school construction, teacher training, and educational resources.",
       stat: "15",
       statLabel: "Schools Supported",
-      image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=800&q=80"
-    }
+      image:
+        "https://plus.unsplash.com/premium_photo-1661315600584-44560aeb8146?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dGVzdGltb255JTIwYW5kJTIwc3VjY2VzcyUyMHN0b3JpZXN8ZW58MHx8MHx8fDA%3D",
+    },
   ];
   
   const containerRef = useRef<HTMLDivElement>(null);

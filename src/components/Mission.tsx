@@ -47,10 +47,10 @@ const Mission = () => {
           
           <AnimatedSection delay={300}>
             <p className="text-lg mb-6 text-balance">
-              Grace Mission is dedicated to transforming lives through compassionate service, sustainable development, and spiritual growth. We work alongside local communities to address immediate needs while building lasting solutions.
+              Live Message is dedicated to transforming lives through compassionate service, sustainable development, and spiritual growth. We work alongside local communities to address immediate needs while building lasting solutions.
             </p>
             <p className="text-lg mb-8 text-balance">
-              For over 25 years, our volunteers and partners have served in more than 40 countries, responding to crises, establishing educational programs, and providing healthcare to those in need.
+              For over 10 years, our volunteers and partners have served in more than 20 countries, responding to crises, establishing educational programs, and providing healthcare to those in need.
             </p>
             <a href="#programs" className="button-primary">
               Explore Our Programs

@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Organization Info */}
           <div>
-            <h3 className="text-xl font-medium mb-4">Grace Mission</h3>
+            <h3 className="text-xl font-medium mb-4">Live Message global movement ministry</h3>
             <p className="text-primary-foreground/80 mb-6">
               Bringing hope and positive change to communities around the world through faith, service, and compassion.
             </p>
@@ -66,20 +66,20 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin size={20} className="text-primary-foreground/70 mt-1" />
                 <span className="text-primary-foreground/80">
-                  123 Compassion Way<br />
-                  Hopeville, CA 90210
+                  Ethiopia,<br />
+                  Addis Ababa
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-primary-foreground/70" />
                 <a href="tel:+11234567890" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  (123) 456-7890
+                  (+251) 909-0909
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-primary-foreground/70" />
                 <a href="mailto:info@gracemission.org" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  info@gracemission.org
+                  info@livemessage.org
                 </a>
               </li>
             </ul>

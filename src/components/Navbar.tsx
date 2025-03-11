@@ -51,9 +51,9 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="flex items-center">
-          <span className="text-xl font-semibold tracking-tight text-primary">Grace Mission</span>
-        </Link>
+        <a href="#" className="flex items-center">
+          <span className="text-xl font-semibold tracking-tight text-primary">Live Message</span>
+        </a>
         
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6">

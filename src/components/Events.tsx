@@ -11,17 +11,21 @@ const Events = () => {
       date: "June 15, 2024",
       time: "8:00 AM - 10:00 AM",
       location: "Grace Mission Center",
-      description: "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
-      image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80"
+      description:
+        "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
+      image:
+        "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80",
     },
     {
       id: 2,
-      title: "Youth Mission Trip",
-      date: "July 10-17, 2024",
+      title: "Mission Trip to Omo",
+      date: "March 13-17, 2025",
       time: "All Day",
-      location: "Guatemala City, Guatemala",
-      description: "Our annual youth mission trip focused on construction projects and children's ministry in underserved communities.",
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80"
+      location: "South Omo, Jinka",
+      description:
+        "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
+      image:
+        "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
     },
     {
       id: 3,
@@ -29,9 +33,11 @@ const Events = () => {
       date: "August 5, 2024",
       time: "7:00 PM - 9:00 PM",
       location: "Grace Mission Sanctuary",
-      description: "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
-      image: "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80"
-    }
+      description:
+        "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
+      image:
+        "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
+    },
   ];
 
   return (
