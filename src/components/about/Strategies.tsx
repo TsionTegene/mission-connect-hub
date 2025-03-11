@@ -1,5 +1,5 @@
 
-import { Target, Route, PuzzlePiece } from "lucide-react";
+import { Target, Route, PlaySquare } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 
 const Strategies = () => {
@@ -15,7 +15,7 @@ const Strategies = () => {
       description: "We create programs designed for long-term impact, focusing on building capacity rather than dependency."
     },
     {
-      icon: <PuzzlePiece className="h-10 w-10 text-primary" />,
+      icon: <PlaySquare className="h-10 w-10 text-primary" />,
       title: "Holistic Care",
       description: "We address physical, emotional, educational, and spiritual needs through integrated programming."
     }
