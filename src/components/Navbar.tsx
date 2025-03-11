@@ -2,20 +2,23 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
   
   const navLinks = [
-    { name: "Home", href: "#hero" },
-    { name: "Mission", href: "#mission" },
-    { name: "Ministries", href: "#ministries" },
-    { name: "Programs", href: "#programs" },
-    { name: "Compassion", href: "#compassion-projects" },
-    { name: "Events", href: "#events" },
-    { name: "Get Involved", href: "#get-involved" },
-    { name: "Donate", href: "#donate" }
+    { name: "Home", href: "/", hash: "#hero" },
+    { name: "About", href: "/about", hash: "" },
+    { name: "Mission", href: "/", hash: "#mission" },
+    { name: "Ministries", href: "/", hash: "#ministries" },
+    { name: "Programs", href: "/", hash: "#programs" },
+    { name: "Compassion", href: "/", hash: "#compassion-projects" },
+    { name: "Events", href: "/", hash: "#events" },
+    { name: "Get Involved", href: "/", hash: "#get-involved" },
+    { name: "Donate", href: "/", hash: "#donate" }
   ];
 
   useEffect(() => {
@@ -31,6 +34,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const getHref = (link: typeof navLinks[0]) => {
+    if (link.hash && location.pathname === link.href) {
+      return link.hash;
+    }
+    return link.href;
+  };
+
   return (
     <nav
       className={cn(
@@ -41,20 +51,20 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <a href="#" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <span className="text-xl font-semibold tracking-tight text-primary">Grace Mission</span>
-        </a>
+        </Link>
         
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6">
           {navLinks.map((link) => (
             <li key={link.name}>
-              <a
-                href={link.href}
+              <Link
+                to={getHref(link)}
                 className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
               >
                 {link.name}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -84,14 +94,14 @@ const Navbar = () => {
       >
         <div className="p-6 space-y-4 divide-y divide-gray-200/20">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.href}
+              to={getHref(link)}
               className="block py-2 text-base text-foreground/80 hover:text-primary transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
       </div>
