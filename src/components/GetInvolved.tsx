@@ -32,7 +32,7 @@ const GetInvolved = () => {
   ];
 
   return (
-    <section id="get-involved" className="py-20 md:py-32">
+    <section id="get-involved" className="py-12 md:py-20">
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">

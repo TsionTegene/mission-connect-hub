@@ -32,7 +32,7 @@ const Ministries = () => {
   ];
 
   return (
-    <section id="ministries" className="py-20 md:py-32">
+    <section id="ministries" className="py-12 md:py-20">
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">

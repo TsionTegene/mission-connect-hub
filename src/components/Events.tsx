@@ -35,7 +35,7 @@ const Events = () => {
   ];
 
   return (
-    <section id="events" className="py-20 md:py-32 bg-secondary/30">
+    <section id="events" className="py-12 md:py-20 bg-secondary/30">
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">

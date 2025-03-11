@@ -18,7 +18,7 @@ const Mission = () => {
   ];
 
   return (
-    <section id="mission" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="mission" className="py-12 md:py-20 relative overflow-hidden">
       {/* Background design elements */}
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
