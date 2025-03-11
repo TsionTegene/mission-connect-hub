@@ -10,9 +10,12 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", href: "#hero" },
     { name: "Mission", href: "#mission" },
+    { name: "Ministries", href: "#ministries" },
     { name: "Programs", href: "#programs" },
-    { name: "Donate", href: "#donate" },
-    { name: "Contact", href: "#contact" }
+    { name: "Compassion", href: "#compassion-projects" },
+    { name: "Events", href: "#events" },
+    { name: "Get Involved", href: "#get-involved" },
+    { name: "Donate", href: "#donate" }
   ];
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const Navbar = () => {
         </a>
         
         {/* Desktop menu */}
-        <ul className="hidden md:flex gap-8">
+        <ul className="hidden md:flex gap-6">
           {navLinks.map((link) => (
             <li key={link.name}>
               <a

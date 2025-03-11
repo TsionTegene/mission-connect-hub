@@ -4,6 +4,10 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Mission from "@/components/Mission";
 import Programs from "@/components/Programs";
+import Ministries from "@/components/Ministries";
+import Events from "@/components/Events";
+import GetInvolved from "@/components/GetInvolved";
+import CompassionProjects from "@/components/CompassionProjects";
 import Donate from "@/components/Donate";
 import Footer from "@/components/Footer";
 
@@ -42,7 +46,11 @@ const Index = () => {
       <Navbar />
       <Hero />
       <Mission />
+      <Ministries />
       <Programs />
+      <CompassionProjects />
+      <Events />
+      <GetInvolved />
       <Donate />
       <Footer />
     </div>
