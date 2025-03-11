@@ -1,6 +1,6 @@
 
 import { useRef } from "react";
-import { Water, Home, Heart, Utensils, BookOpen } from "lucide-react";
+import { Droplet, Home, Heart, Utensils, BookOpen } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const CompassionProjects = () => {
   const projects = [
     {
-      icon: <Water className="h-6 w-6 text-primary" />,
+      icon: <Droplet className="h-6 w-6 text-primary" />,
       title: "Clean Water Initiative",
       description: "Providing clean water wells and sanitation education to communities lacking access to safe drinking water.",
       stat: "27",
