@@ -17,8 +17,7 @@ const Navbar = () => {
     { name: "Programs", href: "/", hash: "#programs" },
     { name: "Compassion", href: "/", hash: "#compassion-projects" },
     { name: "Events", href: "/", hash: "#events" },
-    { name: "Get Involved", href: "/", hash: "#get-involved" },
-    { name: "Donate", href: "/", hash: "#donate" }
+    { name: "Get Involved", href: "/", hash: "#get-involved" }
   ];
 
   useEffect(() => {

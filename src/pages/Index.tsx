@@ -8,7 +8,6 @@ import Ministries from "@/components/Ministries";
 import Events from "@/components/Events";
 import GetInvolved from "@/components/GetInvolved";
 import CompassionProjects from "@/components/CompassionProjects";
-import Donate from "@/components/Donate";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -51,7 +50,6 @@ const Index = () => {
       <CompassionProjects />
       <Events />
       <GetInvolved />
-      <Donate />
       <Footer />
     </div>
   );
