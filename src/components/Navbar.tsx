@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,14 +9,14 @@ const Navbar = () => {
   const location = useLocation();
   
   const navLinks = [
-    { name: "Home", href: "/", hash: "#hero" },
-    { name: "About", href: "/about", hash: "#about" },
-    { name: "Mission", href: "/", hash: "#mission" },
-    { name: "Ministries", href: "/", hash: "#ministries" },
-    { name: "Programs", href: "/", hash: "#programs" },
-    { name: "Compassion", href: "/", hash: "#compassion-projects" },
-    { name: "Events", href: "/", hash: "#events" },
-    { name: "Get Involved", href: "/", hash: "#get-involved" }
+    { name: "Home", href: "/", hash: "" },
+    { name: "About", href: "/about", hash: "" },
+    { name: "Mission", href: "/#mission", hash: "mission" },
+    { name: "Ministries", href: "/#ministries", hash: "ministries" },
+    { name: "Programs", href: "/#programs", hash: "programs" },
+    { name: "Compassion", href: "/#compassion-projects", hash: "compassion-projects" },
+    { name: "Events", href: "/#events", hash: "events" },
+    { name: "Get Involved", href: "/#get-involved", hash: "get-involved" }
   ];
 
   useEffect(() => {
@@ -33,11 +32,28 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const getHref = (link: typeof navLinks[0]) => {
-    if (link.hash && location.pathname === link.href) {
-      return link.hash;
+  const handleNavigation = (link: typeof navLinks[0], e: React.MouseEvent) => {
+    // Only for links with hash on the home page
+    if (link.hash && link.href.startsWith('/#')) {
+      e.preventDefault();
+      
+      // If we're already on the homepage, just scroll to the section
+      if (location.pathname === '/') {
+        const element = document.getElementById(link.hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', `/#${link.hash}`);
+        }
+      } else {
+        // Otherwise, navigate to homepage with hash
+        window.location.href = link.href;
+      }
+      
+      // Close mobile menu if open
+      if (isMobileMenuOpen) {
+        setIsMobileMenuOpen(false);
+      }
     }
-    return link.href;
   };
 
   return (
@@ -50,16 +66,17 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <a href="#" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <span className="text-xl font-semibold tracking-tight text-primary">Live Message</span>
-        </a>
+        </Link>
         
         {/* Desktop menu */}
         <ul className="hidden md:flex gap-6">
           {navLinks.map((link) => (
             <li key={link.name}>
               <Link
-                to={getHref(link)}
+                to={link.href}
+                onClick={(e) => handleNavigation(link, e)}
                 className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
               >
                 {link.name}
@@ -95,9 +112,9 @@ const Navbar = () => {
           {navLinks.map((link) => (
             <Link
               key={link.name}
-              to={getHref(link)}
+              to={link.href}
               className="block py-2 text-base text-foreground/80 hover:text-primary transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavigation(link, e)}
             >
               {link.name}
             </Link>

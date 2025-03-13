@@ -1,5 +1,6 @@
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Mission from "@/components/Mission";
@@ -11,6 +12,28 @@ import CompassionProjects from "@/components/CompassionProjects";
 import Footer from "@/components/Footer";
 
 const Index = () => {
+  const location = useLocation();
+  const initialized = useRef(false);
+
+  // Handle hash navigation when page loads
+  useEffect(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+      
+      // Check if there's a hash in the URL
+      const hash = location.hash.replace('#', '');
+      if (hash) {
+        // Wait a bit for the page to fully render before scrolling
+        setTimeout(() => {
+          const element = document.getElementById(hash);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      }
+    }
+  }, [location]);
+
   // Smooth scrolling for anchor links
   useEffect(() => {
     const handleAnchorClick = (e: MouseEvent) => {
@@ -19,8 +42,8 @@ const Index = () => {
       
       if (anchor && anchor.getAttribute('href')?.startsWith('#')) {
         e.preventDefault();
-        const targetId = anchor.getAttribute('href') || '';
-        const targetElement = document.querySelector(targetId);
+        const targetId = anchor.getAttribute('href')?.replace('#', '') || '';
+        const targetElement = document.getElementById(targetId);
         
         if (targetElement) {
           targetElement.scrollIntoView({
@@ -28,7 +51,7 @@ const Index = () => {
           });
           
           // Update URL without reload
-          window.history.pushState(null, '', targetId);
+          window.history.pushState(null, '', `#${targetId}`);
         }
       }
     };
