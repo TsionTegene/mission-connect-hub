@@ -11,7 +11,7 @@ const Navbar = () => {
   
   const navLinks = [
     { name: "Home", href: "/", hash: "#hero" },
-    { name: "About", href: "/about", hash: "" },
+    { name: "About", href: "/about", hash: "#about" },
     { name: "Mission", href: "/", hash: "#mission" },
     { name: "Ministries", href: "/", hash: "#ministries" },
     { name: "Programs", href: "/", hash: "#programs" },
