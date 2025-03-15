@@ -1,11 +1,14 @@
+
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   
   const navLinks = [
@@ -28,7 +31,14 @@ const Navbar = () => {
       }
     };
 
+    const checkAuthStatus = async () => {
+      const { data } = await supabase.auth.getSession();
+      setIsAdmin(!!data.session);
+    };
+
     window.addEventListener("scroll", handleScroll);
+    checkAuthStatus();
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -83,6 +93,17 @@ const Navbar = () => {
               </Link>
             </li>
           ))}
+          
+          {/* Admin link - small and discreet */}
+          <li>
+            <Link
+              to={isAdmin ? "/admin/dashboard" : "/admin/login"}
+              className="text-sm text-foreground/50 hover:text-primary transition-colors duration-200 flex items-center gap-1"
+            >
+              <ShieldCheck className="h-3 w-3" />
+              <span className="text-xs">{isAdmin ? "Dashboard" : "Admin"}</span>
+            </Link>
+          </li>
         </ul>
         
         {/* Mobile menu toggle */}
@@ -119,6 +140,15 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+          
+          {/* Admin link in mobile menu */}
+          <Link
+            to={isAdmin ? "/admin/dashboard" : "/admin/login"}
+            className="block py-2 text-base text-foreground/80 hover:text-primary transition-colors flex items-center gap-2"
+          >
+            <ShieldCheck className="h-4 w-4" />
+            <span>{isAdmin ? "Admin Dashboard" : "Admin Login"}</span>
+          </Link>
         </div>
       </div>
     </nav>

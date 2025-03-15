@@ -1,10 +1,13 @@
 
+import { useState, useEffect } from "react";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const Events = () => {
-  const upcomingEvents = [
+  const [upcomingEvents, setUpcomingEvents] = useState([
     {
       id: 1,
       title: "Community Prayer Breakfast",
@@ -38,7 +41,34 @@ const Events = () => {
       image:
         "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
     },
-  ];
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching events:", error);
+        return;
+      }
+      
+      if (data && data.length > 0) {
+        setUpcomingEvents(data);
+      }
+    } catch (error) {
+      console.error("Unexpected error fetching events:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section id="events" className="py-12 md:py-20 bg-secondary/30">
