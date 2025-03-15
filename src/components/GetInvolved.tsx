@@ -28,27 +28,31 @@ const GetInvolved = () => {
     {
       icon: <HandHeart className="h-10 w-10 text-primary" />,
       title: "Volunteer",
-      description: "Serve alongside us in various capacities based on your skills, availability, and passion.",
-      action: "Join Our Team"
+      description:
+        "Serve alongside us in various capacities based on your skills, availability, and passion.",
+      action: "Join Our Team",
     },
     {
       icon: <Users className="h-10 w-10 text-primary" />,
       title: "Small Groups",
-      description: "Connect with others in a small group setting for fellowship, study, and growth.",
-      action: "Find a Group"
+      description:
+        "Connect with others in a small group setting for fellowship, study, and growth.",
+      action: "Join Our Team",
     },
     {
       icon: <Mail className="h-10 w-10 text-primary" />,
       title: "Stay Updated",
-      description: "Sign up for our newsletter to receive mission updates, prayer requests, and event information.",
-      action: "Subscribe"
+      description:
+        "Sign up for our newsletter to receive mission updates, prayer requests, and event information.",
+      action: "Subscribe",
     },
     {
       icon: <PencilLine className="h-10 w-10 text-primary" />,
       title: "Prayer Support",
-      description: "Join our prayer team to lift up the needs of our mission fields and communities we serve.",
-      action: "Commit to Pray"
-    }
+      description:
+        "Join our prayer team to lift up the needs of our mission fields and communities we serve.",
+      action: "Subscribe",
+    },
   ];
 
   return (

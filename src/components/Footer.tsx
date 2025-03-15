@@ -108,7 +108,7 @@ const Footer = () => {
         </div>
         
         <div className="mt-16 pt-8 border-t border-primary-foreground/20 text-center text-primary-foreground/60 text-sm">
-          <p>© {currentYear} Grace Mission. All rights reserved.</p>
+          <p>© {currentYear} Live Message. All rights reserved.</p>
         </div>
       </div>
     </footer>

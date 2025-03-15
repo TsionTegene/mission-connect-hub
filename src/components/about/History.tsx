@@ -12,7 +12,7 @@ const History = () => {
           </span>
           <h2 className="section-title">Our History</h2>
           <p className="section-subtitle mx-auto">
-            Since 1998, Grace Mission has been dedicated to transforming lives through compassionate service.
+            Since 2010, Live Message has been dedicated to transforming lives through compassionate service.
           </p>
         </AnimatedSection>
 
@@ -38,7 +38,7 @@ const History = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-2">Our Beginnings</h3>
                     <p className="text-foreground/80">
-                      Founded by John and Mary Thompson in 1998, Grace Mission began as a small local outreach program serving the community of Springfield. What started as feeding the homeless once a week grew into a global ministry touching thousands of lives.
+                      Founded by John and Mary Thompson in 2010, Live Message began as a small local outreach program serving the community of Ethiopia. What started as feeding the homeless once a week grew into a global ministry touching thousands of lives.
                     </p>
                   </div>
                 </div>
@@ -62,7 +62,7 @@ const History = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-2">Growth and Impact</h3>
                     <p className="text-foreground/80">
-                      Over the past 25 years, we've expanded to operate in 40 countries, built 120 schools, established 35 medical clinics, and trained over 5,000 local leaders. Our focus remains on creating lasting change through community partnership.
+                      Over the past 15 years, we've expanded to operate in 20 countries, built 20 schools, established 5 medical clinics, and trained over 5,000 local leaders. Our focus remains on creating lasting change through community partnership.
                     </p>
                   </div>
                 </div>

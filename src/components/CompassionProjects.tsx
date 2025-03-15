@@ -136,10 +136,10 @@ const CompassionProjects = () => {
                   
                   <div className="flex items-center gap-4 mb-4">
                     <div className="bg-secondary rounded-lg p-3 text-center flex-1">
-                      <div className="text-2xl font-bold text-primary">{project.stat}</div>
-                      <div className="text-xs text-foreground/70">{project.statLabel}</div>
+                      {/* <div className="text-2xl font-bold text-primary">{project.stat}</div>
+                      <div className="text-xs text-foreground/70">{project.statLabel}</div> */}
                     </div>
-                    <Heart className="h-6 w-6 text-primary animate-pulse-soft" />
+                    {/* <Heart className="h-6 w-6 text-primary animate-pulse-soft" /> */}
                   </div>
                   
                   <Button variant="outline" className="w-full mt-2">Support This Project</Button>

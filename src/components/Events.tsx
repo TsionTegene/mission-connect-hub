@@ -23,13 +23,13 @@ const Events = () => {
     {
       id: 1,
       title: "Community Prayer Breakfast",
-      date: "June 15, 2024",
+      date: "June 15, 2025",
       time: "8:00 AM - 10:00 AM",
-      location: "Grace Mission Center",
+      location: "Mulu Wongel Church",
       description:
         "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
       image:
-        "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
     },
     {
       id: 2,
@@ -45,9 +45,9 @@ const Events = () => {
     {
       id: 3,
       title: "Worship Night",
-      date: "August 5, 2024",
+      date: "August 5, 2025",
       time: "7:00 PM - 9:00 PM",
-      location: "Grace Mission Sanctuary",
+      location: "Mulu Wongel Church",
       description:
         "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
       image:

@@ -5,39 +5,43 @@ import AnimatedSection from "@/components/AnimatedSection";
 const Leadership = () => {
   const leaders = [
     {
-      name: "Dr. James Wilson",
+      name: "Dr. Abebe Kebede",
       title: "Executive Director",
-      bio: "With over 20 years of experience in nonprofit leadership, Dr. Wilson brings vision and strategic direction to Grace Mission.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"
+      bio: "With over 10 years of experience in nonprofit leadership, Dr. Abebe brings vision and strategic direction to Live Message.",
+      image:
+        "https://images.unsplash.com/photo-1542296153-d2d387514d97?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZXRoaW9waWFuJTIwbWFufGVufDB8fDB8fHww",
     },
     {
-      name: "Sarah Chen",
+      name: "Sarah Bekele",
       title: "Director of Global Operations",
-      bio: "Sarah oversees our international programs across 40 countries, ensuring effective implementation and impact.",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80"
+      bio: "Sarah oversees our international programs across 20 countries, ensuring effective implementation and impact.",
+      image:
+        "https://images.unsplash.com/photo-1718203694879-766b434639f2?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fGV0aGlvcGlhbiUyMHdvbWFufGVufDB8fDB8fHww",
     },
     {
-      name: "Michael Rodriguez",
+      name: "Kebede Abebe",
       title: "Chief Financial Officer",
-      bio: "Michael ensures strategic stewardship of resources and transparent financial management.",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80"
+      bio: "Kebede ensures strategic stewardship of resources and transparent financial management.",
+      image:
+        "https://images.unsplash.com/photo-1555908845-4dbd45b750de?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGV0aGlvcGlhbiUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
     },
     {
-      name: "Dr. Amara Johnson",
+      name: "Dr. Amare Bekele",
       title: "Director of Education",
-      bio: "Dr. Johnson leads our educational initiatives, developing curriculum and training programs worldwide.",
-      image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=300&q=80"
-    }
+      bio: "Dr. Amare leads our educational initiatives, developing curriculum and training programs worldwide.",
+      image:
+        "https://images.unsplash.com/photo-1705993235922-e09b232131a6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGV0aGlvcGlhbiUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
+    },
   ];
 
   const boardMembers = [
-    "Thomas Greene, Board Chair",
-    "Linda Patel, Vice Chair",
-    "Robert Kim, Treasurer",
-    "Elizabeth Mbeki, Secretary",
-    "Rev. David Thompson",
-    "Dr. Maria Gonzalez",
-    "William Chen, J.D."
+    "Thomas Genene, Board Chair",
+    "Selam Tesfaye, Vice Chair",
+    "Robel Kinfe, Treasurer",
+    "Elisabeth Mekbib, Secretary",
+    "Rev. Dawit Thompson",
+    "Dr. Martha Gobeze",
+    "Henok Nega, J.D."
   ];
 
   return (

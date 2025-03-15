@@ -30,7 +30,8 @@ const Strategies = () => {
           </span>
           <h2 className="section-title">Ministry Strategies</h2>
           <p className="section-subtitle mx-auto text-center">
-            Our approach to mission work is thoughtful, strategic, and focused on creating sustainable impact.
+            Our approach to mission work is thoughtful, strategic, and focused
+            on creating sustainable impact.
           </p>
         </AnimatedSection>
 
@@ -48,27 +49,45 @@ const Strategies = () => {
 
         <AnimatedSection delay={300} className="mt-16">
           <div className="glass-dark p-8 rounded-xl">
-            <h3 className="text-2xl font-light text-center mb-6">Our Strategic Process</h3>
+            <h3 className="text-2xl font-light text-center mb-6">
+              Our Strategic Process
+            </h3>
             <div className="grid md:grid-cols-4 gap-4">
               <div className="bg-white/10 p-4 rounded-lg text-center">
-                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">1</span>
+                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">
+                  1
+                </span>
                 <h4 className="font-medium mb-2">Listen</h4>
-                <p className="text-sm text-white/80">Understand community needs through dialogue and research</p>
+                <p className="text-sm text-foreground/80">
+                  Understand community needs through dialogue and research
+                </p>
               </div>
               <div className="bg-white/10 p-4 rounded-lg text-center">
-                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">2</span>
+                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">
+                  2
+                </span>
                 <h4 className="font-medium mb-2">Collaborate</h4>
-                <p className="text-sm text-white/80">Partner with local leaders and organizations</p>
+                <p className="text-sm text-foreground/80">
+                  Partner with local leaders and organizations
+                </p>
               </div>
               <div className="bg-white/10 p-4 rounded-lg text-center">
-                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">3</span>
+                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">
+                  3
+                </span>
                 <h4 className="font-medium mb-2">Implement</h4>
-                <p className="text-sm text-white/80">Execute programs with local involvement</p>
+                <p className="text-sm text-foreground/80">
+                  Execute programs with local involvement
+                </p>
               </div>
               <div className="bg-white/10 p-4 rounded-lg text-center">
-                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">4</span>
+                <span className="inline-block w-8 h-8 rounded-full bg-primary text-white font-medium mb-3 flex items-center justify-center">
+                  4
+                </span>
                 <h4 className="font-medium mb-2">Empower</h4>
-                <p className="text-sm text-white/80">Transfer ownership to community leaders</p>
+                <p className="text-sm text-foreground/80">
+                  Transfer ownership to community leaders
+                </p>
               </div>
             </div>
           </div>
