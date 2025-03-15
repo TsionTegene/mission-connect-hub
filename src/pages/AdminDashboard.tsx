@@ -9,9 +9,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Calendar, MapPin, Clock } from "lucide-react";
 import { toast } from "sonner";
 
+// Define an event type
+type Event = {
+  id: number | string;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  description?: string;
+  image?: string;
+  created_at?: string;
+};
+
 const AdminDashboard = () => {
-  const [session, setSession] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [session, setSession] = useState<any>(null);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
@@ -40,10 +52,14 @@ const AdminDashboard = () => {
 
   const fetchEvents = async () => {
     try {
+      // Using type assertion to tell TypeScript this is a valid table
       const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false }) as {
+          data: Event[] | null;
+          error: any;
+        };
 
       if (error) throw error;
       setEvents(data || []);
@@ -55,12 +71,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.title || !formData.date || !formData.location) {
@@ -71,10 +87,14 @@ const AdminDashboard = () => {
     setLoading(true);
     
     try {
+      // Using type assertion for the insert operation
       const { data, error } = await supabase
-        .from("events")
+        .from('events')
         .insert([formData])
-        .select();
+        .select() as {
+          data: Event[] | null;
+          error: any;
+        };
 
       if (error) throw error;
       

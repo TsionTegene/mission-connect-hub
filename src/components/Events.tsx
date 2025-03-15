@@ -6,8 +6,20 @@ import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
+// Define an event type
+type Event = {
+  id: number | string;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  description?: string;
+  image?: string;
+  created_at?: string;
+};
+
 const Events = () => {
-  const [upcomingEvents, setUpcomingEvents] = useState([
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([
     {
       id: 1,
       title: "Community Prayer Breakfast",
@@ -50,10 +62,14 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
+      // Using type assertion to tell TypeScript this is a valid table
       const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false }) as { 
+          data: Event[] | null; 
+          error: any; 
+        };
       
       if (error) {
         console.error("Error fetching events:", error);
