@@ -4,7 +4,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 
 const History = () => {
   return (
-    <section id="history" className="py-12 md:py-20">
+    <section id="history" className="py-12 md:py-20 section-primary">
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-accent/20 text-accent-foreground rounded-full">
@@ -32,7 +32,7 @@ const History = () => {
 
           <AnimatedSection delay={200}>
             <div className="space-y-6">
-              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
+              <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
                   <HistoryIcon className="h-8 w-8 text-primary mt-1" />
                   <div>
@@ -44,7 +44,7 @@ const History = () => {
                 </div>
               </div>
 
-              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
+              <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
                   <BookOpen className="h-8 w-8 text-primary mt-1" />
                   <div>
@@ -56,7 +56,7 @@ const History = () => {
                 </div>
               </div>
 
-              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
+              <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
                   <HistoryIcon className="h-8 w-8 text-primary mt-1" />
                   <div>

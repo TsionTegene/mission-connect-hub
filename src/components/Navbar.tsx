@@ -1,9 +1,18 @@
 
 import { useState, useEffect } from "react";
-import { Menu, X, ShieldCheck } from "lucide-react";
+import { Menu, X, ShieldCheck, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,12 +20,18 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   
-  const navLinks = [
+  const mainNavLinks = [
     { name: "Home", href: "/", hash: "" },
     { name: "About", href: "/about", hash: "" },
+  ];
+  
+  const ministryNavLinks = [
     { name: "Mission", href: "/#mission", hash: "mission" },
     { name: "Ministries", href: "/#ministries", hash: "ministries" },
     { name: "Programs", href: "/#programs", hash: "programs" },
+  ];
+  
+  const involvementLinks = [
     { name: "Compassion", href: "/#compassion-projects", hash: "compassion-projects" },
     { name: "Events", href: "/#events", hash: "events" },
     { name: "Get Involved", href: "/#get-involved", hash: "get-involved" }
@@ -42,7 +57,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavigation = (link: typeof navLinks[0], e: React.MouseEvent) => {
+  const handleNavigation = (link: {name: string, href: string, hash: string}, e: React.MouseEvent) => {
     // Only for links with hash on the home page
     if (link.hash && link.href.startsWith('/#')) {
       e.preventDefault();
@@ -81,30 +96,74 @@ const Navbar = () => {
         </Link>
         
         {/* Desktop menu */}
-        <ul className="hidden md:flex gap-6">
-          {navLinks.map((link) => (
-            <li key={link.name}>
-              <Link
-                to={link.href}
-                onClick={(e) => handleNavigation(link, e)}
-                className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
-              >
-                {link.name}
-              </Link>
+        <div className="hidden md:flex items-center gap-2">
+          <ul className="flex gap-6">
+            {mainNavLinks.map((link) => (
+              <li key={link.name}>
+                <Link
+                  to={link.href}
+                  onClick={(e) => handleNavigation(link, e)}
+                  className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+            
+            {/* Ministries Dropdown */}
+            <li className="relative group">
+              <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
+                Ministries
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-1">
+                  {ministryNavLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      onClick={(e) => handleNavigation(link, e)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-accent/10"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </li>
-          ))}
+            
+            {/* Get Involved Dropdown */}
+            <li className="relative group">
+              <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
+                Get Involved
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-1">
+                  {involvementLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      onClick={(e) => handleNavigation(link, e)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-accent/10"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </li>
+          </ul>
           
           {/* Admin link - small and discreet */}
-          <li>
-            <Link
-              to={isAdmin ? "/admin/dashboard" : "/admin/login"}
-              className="text-sm text-foreground/50 hover:text-primary transition-colors duration-200 flex items-center gap-1"
-            >
-              <ShieldCheck className="h-3 w-3" />
-              <span className="text-xs">{isAdmin ? "Dashboard" : "Admin"}</span>
-            </Link>
-          </li>
-        </ul>
+          <Link
+            to={isAdmin ? "/admin/dashboard" : "/admin/login"}
+            className="text-sm text-foreground/50 hover:text-primary transition-colors duration-200 flex items-center gap-1 ml-4"
+          >
+            <ShieldCheck className="h-3 w-3" />
+            <span className="text-xs">{isAdmin ? "Dashboard" : "Admin"}</span>
+          </Link>
+        </div>
         
         {/* Mobile menu toggle */}
         <button
@@ -130,7 +189,8 @@ const Navbar = () => {
         )}
       >
         <div className="p-6 space-y-4 divide-y divide-gray-200/20">
-          {navLinks.map((link) => (
+          {/* Main links */}
+          {mainNavLinks.map((link) => (
             <Link
               key={link.name}
               to={link.href}
@@ -140,6 +200,36 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+          
+          {/* Ministry section */}
+          <div className="pt-2">
+            <p className="py-1 text-sm font-semibold text-accent">Ministries</p>
+            {ministryNavLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="block py-2 pl-2 text-base text-foreground/80 hover:text-primary transition-colors"
+                onClick={(e) => handleNavigation(link, e)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Involvement section */}
+          <div className="pt-2">
+            <p className="py-1 text-sm font-semibold text-accent">Get Involved</p>
+            {involvementLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="block py-2 pl-2 text-base text-foreground/80 hover:text-primary transition-colors"
+                onClick={(e) => handleNavigation(link, e)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
           
           {/* Admin link in mobile menu */}
           <Link

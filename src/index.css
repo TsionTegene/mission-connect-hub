@@ -5,7 +5,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 40% 98%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -17,7 +17,7 @@
     --primary: 220 75% 30%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 219 70% 95%;
+    --secondary: 214 100% 96%;
     --secondary-foreground: 222 47% 11.2%;
 
     --muted: 210 40% 96.1%;
@@ -91,6 +91,18 @@
 
   .button-outline {
     @apply inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-medium text-primary border border-primary/20 hover:bg-secondary transition-all duration-200 ease-in-out;
+  }
+  
+  .section-alt {
+    @apply bg-accent/10;
+  }
+  
+  .section-primary {
+    @apply bg-primary/5;
+  }
+  
+  .card-highlight {
+    @apply border-l-4 border-l-accent shadow-md bg-white;
   }
 }
 

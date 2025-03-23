@@ -3,8 +3,8 @@ import AnimatedSection from "@/components/AnimatedSection";
 
 const AboutHero = () => {
   return (
-    <section id="about-hero" className="pt-32 pb-12 md:pt-40 md:pb-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-accent/10 z-0"></div>
+    <section id="about-hero" className="pt-32 pb-12 md:pt-40 md:pb-20 relative overflow-hidden section-alt">
+      <div className="absolute inset-0 bg-accent/20 z-0"></div>
       <div className="section-container relative z-10">
         <AnimatedSection>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-primary">About Us</h1>
