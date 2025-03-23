@@ -11,6 +11,7 @@ import { toast } from "sonner";
 const AdminLogin = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -70,22 +71,30 @@ const AdminLogin = () => {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md glass">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Admin Portal</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Admin Portal
+          </CardTitle>
           <CardDescription className="text-center">
             Sign in to access the admin dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="login">Login</TabsTrigger>
               <TabsTrigger value="signup">Sign Up</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="login">
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="email-login" className="text-sm font-medium">Email</label>
+                  <label htmlFor="email-login" className="text-sm font-medium">
+                    Email
+                  </label>
                   <Input
                     id="email-login"
                     type="email"
@@ -96,7 +105,12 @@ const AdminLogin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="password-login" className="text-sm font-medium">Password</label>
+                  <label
+                    htmlFor="password-login"
+                    className="text-sm font-medium"
+                  >
+                    Password
+                  </label>
                   <Input
                     id="password-login"
                     type="password"
@@ -105,8 +119,8 @@ const AdminLogin = () => {
                     required
                   />
                 </div>
-                <Button 
-                  className="w-full mt-4" 
+                <Button
+                  className="w-full mt-4"
                   type="submit"
                   disabled={loading}
                 >
@@ -114,11 +128,13 @@ const AdminLogin = () => {
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="signup">
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
-                  <label htmlFor="email-signup" className="text-sm font-medium">Email</label>
+                  <label htmlFor="email-signup" className="text-sm font-medium">
+                    Email
+                  </label>
                   <Input
                     id="email-signup"
                     type="email"
@@ -129,7 +145,25 @@ const AdminLogin = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="password-signup" className="text-sm font-medium">Password</label>
+                  <label htmlFor="email-signup" className="text-sm font-medium">
+                    Username
+                  </label>
+                  <Input
+                    id="username-signup"
+                    type="text"
+                    placeholder="admin"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="password-signup"
+                    className="text-sm font-medium"
+                  >
+                    Password
+                  </label>
                   <Input
                     id="password-signup"
                     type="password"
@@ -138,8 +172,8 @@ const AdminLogin = () => {
                     required
                   />
                 </div>
-                <Button 
-                  className="w-full mt-4" 
+                <Button
+                  className="w-full mt-4"
                   type="submit"
                   disabled={loading}
                 >
