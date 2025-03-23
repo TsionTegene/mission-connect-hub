@@ -7,55 +7,13 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import EventRegistration from "./EventRegistration";
+import { Database } from "@/integrations/supabase/types";
 
-// Define an event type
-type Event = {
-  id: number | string;
-  title: string;
-  date: string;
-  time?: string;
-  location: string;
-  description?: string;
-  image?: string;
-  created_at?: string;
-};
+// Define an event type using the Database type
+type Event = Database["public"]["Tables"]["events"]["Row"];
 
 const Events = () => {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([
-    {
-      id: 1,
-      title: "Community Prayer Breakfast",
-      date: "June 15, 2025",
-      time: "8:00 AM - 10:00 AM",
-      location: "Mulu Wongel Church",
-      description:
-        "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
-      image:
-        "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
-    },
-    {
-      id: 2,
-      title: "Mission Trip to Omo",
-      date: "March 13-17, 2025",
-      time: "All Day",
-      location: "South Omo, Jinka",
-      description:
-        "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
-      image:
-        "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
-    },
-    {
-      id: 3,
-      title: "Worship Night",
-      date: "August 5, 2025",
-      time: "7:00 PM - 9:00 PM",
-      location: "Mulu Wongel Church",
-      description:
-        "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
-      image:
-        "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
-    },
-  ]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -65,14 +23,10 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      // Using type assertion to tell TypeScript this is a valid table
       const { data, error } = await supabase
         .from('events')
         .select('*')
-        .order('created_at', { ascending: false }) as { 
-          data: Event[] | null; 
-          error: any; 
-        };
+        .order('created_at', { ascending: false });
       
       if (error) {
         console.error("Error fetching events:", error);
@@ -81,6 +35,46 @@ const Events = () => {
       
       if (data && data.length > 0) {
         setUpcomingEvents(data);
+      } else {
+        // Fallback to example events if no events found
+        setUpcomingEvents([
+          {
+            id: "1",
+            title: "Community Prayer Breakfast",
+            date: "June 15, 2025",
+            time: "8:00 AM - 10:00 AM",
+            location: "Mulu Wongel Church",
+            description:
+              "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
+            image:
+              "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
+            created_at: new Date().toISOString()
+          },
+          {
+            id: "2",
+            title: "Mission Trip to Omo",
+            date: "March 13-17, 2025",
+            time: "All Day",
+            location: "South Omo, Jinka",
+            description:
+              "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
+            image:
+              "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
+            created_at: new Date().toISOString()
+          },
+          {
+            id: "3",
+            title: "Worship Night",
+            date: "August 5, 2025",
+            time: "7:00 PM - 9:00 PM",
+            location: "Mulu Wongel Church",
+            description:
+              "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
+            image:
+              "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
+            created_at: new Date().toISOString()
+          },
+        ]);
       }
     } catch (error) {
       console.error("Unexpected error fetching events:", error);
@@ -108,7 +102,7 @@ const Events = () => {
               <div className="glass rounded-xl overflow-hidden h-full flex flex-col">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src={event.image} 
+                    src={event.image || ""} 
                     alt={event.title} 
                     className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110"
                   />
@@ -121,17 +115,19 @@ const Events = () => {
                     <span>{event.date}</span>
                   </div>
                   
-                  <div className="flex items-center mb-2 text-sm text-foreground/80">
-                    <Clock className="h-4 w-4 mr-2" />
-                    <span>{event.time}</span>
-                  </div>
+                  {event.time && (
+                    <div className="flex items-center mb-2 text-sm text-foreground/80">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>{event.time}</span>
+                    </div>
+                  )}
                   
                   <div className="flex items-center mb-4 text-sm text-foreground/80">
                     <MapPin className="h-4 w-4 mr-2" />
                     <span>{event.location}</span>
                   </div>
                   
-                  <p className="text-foreground/80 text-sm flex-1 mb-4">{event.description}</p>
+                  <p className="text-foreground/80 text-sm flex-1 mb-4">{event.description || ""}</p>
                   
                   <Dialog>
                     <DialogTrigger asChild>

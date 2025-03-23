@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Database } from "@/integrations/supabase/types";
 
 type EventRegistrationProps = {
   eventId: string | number;
@@ -12,14 +13,7 @@ type EventRegistrationProps = {
   onClose: () => void;
 };
 
-type RegistrationData = {
-  event_id: string | number;
-  event_title: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes: string;
-};
+type RegistrationInsert = Database["public"]["Tables"]["registrations"]["Insert"];
 
 const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationProps) => {
   const [formData, setFormData] = useState({
@@ -46,16 +40,19 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
     setLoading(true);
     
     try {
-      const registrationData: RegistrationData = {
-        event_id: eventId,
+      // Create a properly typed registration data object
+      const registrationData: RegistrationInsert = {
+        event_id: eventId.toString(), // Ensure event_id is a string
         event_title: eventTitle,
-        ...formData
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        notes: formData.notes || null,
       };
       
-      // Use type casting to work around the type issue since our DB schema has been updated
       const { error } = await supabase
         .from('registrations')
-        .insert([registrationData]);
+        .insert(registrationData);
 
       if (error) throw error;
       

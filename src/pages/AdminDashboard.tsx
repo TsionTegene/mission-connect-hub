@@ -10,29 +10,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Calendar, MapPin, Clock, User, Mail, Phone, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Database } from "@/integrations/supabase/types";
 
-// Define types
-type Event = {
-  id: number | string;
-  title: string;
-  date: string;
-  time?: string;
-  location: string;
-  description?: string;
-  image?: string;
-  created_at?: string;
-};
-
-type Registration = {
-  id: number | string;
-  event_id: number | string;
-  event_title: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes?: string;
-  created_at: string;
-};
+// Define types using Database types
+type Event = Database["public"]["Tables"]["events"]["Row"];
+type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
+type Registration = Database["public"]["Tables"]["registrations"]["Row"];
 
 const AdminDashboard = () => {
   const [session, setSession] = useState<any>(null);
@@ -40,7 +23,7 @@ const AdminDashboard = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("events");
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<EventInsert>({
     title: "",
     date: "",
     time: "",
@@ -89,10 +72,7 @@ const AdminDashboard = () => {
       const { data, error } = await supabase
         .from('events')
         .select('*')
-        .order('created_at', { ascending: false }) as {
-          data: Event[] | null;
-          error: any;
-        };
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setEvents(data || []);
@@ -106,14 +86,10 @@ const AdminDashboard = () => {
 
   const fetchRegistrations = async () => {
     try {
-      // Use type assertion to handle the registration table
       const { data, error } = await supabase
         .from('registrations')
         .select('*')
-        .order('created_at', { ascending: false }) as {
-          data: Registration[] | null;
-          error: any;
-        };
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       setRegistrations(data || []);
@@ -141,11 +117,8 @@ const AdminDashboard = () => {
     try {
       const { data, error } = await supabase
         .from('events')
-        .insert([formData])
-        .select() as {
-          data: Event[] | null;
-          error: any;
-        };
+        .insert(formData)
+        .select();
 
       if (error) throw error;
       
@@ -242,7 +215,7 @@ const AdminDashboard = () => {
                       <Input
                         id="time"
                         name="time"
-                        value={formData.time}
+                        value={formData.time || ""}
                         onChange={handleChange}
                         placeholder="8:00 AM - 10:00 AM"
                       />
@@ -265,7 +238,7 @@ const AdminDashboard = () => {
                       <Textarea
                         id="description"
                         name="description"
-                        value={formData.description}
+                        value={formData.description || ""}
                         onChange={handleChange}
                         placeholder="Event description..."
                         rows={4}
@@ -277,7 +250,7 @@ const AdminDashboard = () => {
                       <Input
                         id="image"
                         name="image"
-                        value={formData.image}
+                        value={formData.image || ""}
                         onChange={handleChange}
                         placeholder="https://example.com/image.jpg"
                       />
