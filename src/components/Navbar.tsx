@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Menu, X, ShieldCheck, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -22,19 +21,22 @@ const Navbar = () => {
   
   const mainNavLinks = [
     { name: "Home", href: "/", hash: "" },
-    { name: "About", href: "/about", hash: "" },
   ];
   
-  const ministryNavLinks = [
+  const aboutLinks = [
+    { name: "About Us", href: "/about", hash: "" },
     { name: "Mission", href: "/#mission", hash: "mission" },
+  ];
+  
+  const ministriesLinks = [
     { name: "Ministries", href: "/#ministries", hash: "ministries" },
     { name: "Programs", href: "/#programs", hash: "programs" },
   ];
   
   const involvementLinks = [
     { name: "Compassion", href: "/#compassion-projects", hash: "compassion-projects" },
-    { name: "Events", href: "/#events", hash: "events" },
-    { name: "Get Involved", href: "/#get-involved", hash: "get-involved" }
+    { name: "Get Involved", href: "/#get-involved", hash: "get-involved" },
+    { name: "Events", href: "/#events", hash: "events" }
   ];
 
   useEffect(() => {
@@ -110,15 +112,15 @@ const Navbar = () => {
               </li>
             ))}
             
-            {/* Ministries Dropdown */}
+            {/* About & Mission Dropdown */}
             <li className="relative group">
               <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                Ministries
+                About & Mission
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="py-1">
-                  {ministryNavLinks.map((link) => (
+                  {aboutLinks.map((link) => (
                     <Link
                       key={link.name}
                       to={link.href}
@@ -132,10 +134,32 @@ const Navbar = () => {
               </div>
             </li>
             
-            {/* Get Involved Dropdown */}
+            {/* Ministries & Programs Dropdown */}
             <li className="relative group">
               <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                Get Involved
+                Ministries & Programs
+                <ChevronDown className="h-4 w-4 opacity-70" />
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-1">
+                  {ministriesLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      onClick={(e) => handleNavigation(link, e)}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-accent/10"
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </li>
+            
+            {/* Compassion & Get Involved Dropdown */}
+            <li className="relative group">
+              <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
+                Compassion & Get Involved
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -201,10 +225,10 @@ const Navbar = () => {
             </Link>
           ))}
           
-          {/* Ministry section */}
+          {/* About & Mission section */}
           <div className="pt-2">
-            <p className="py-1 text-sm font-semibold text-accent">Ministries</p>
-            {ministryNavLinks.map((link) => (
+            <p className="py-1 text-sm font-semibold text-accent">About & Mission</p>
+            {aboutLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.href}
@@ -216,9 +240,24 @@ const Navbar = () => {
             ))}
           </div>
           
-          {/* Involvement section */}
+          {/* Ministries & Programs section */}
           <div className="pt-2">
-            <p className="py-1 text-sm font-semibold text-accent">Get Involved</p>
+            <p className="py-1 text-sm font-semibold text-accent">Ministries & Programs</p>
+            {ministriesLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="block py-2 pl-2 text-base text-foreground/80 hover:text-primary transition-colors"
+                onClick={(e) => handleNavigation(link, e)}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Compassion & Get Involved section */}
+          <div className="pt-2">
+            <p className="py-1 text-sm font-semibold text-accent">Compassion & Get Involved</p>
             {involvementLinks.map((link) => (
               <Link
                 key={link.name}

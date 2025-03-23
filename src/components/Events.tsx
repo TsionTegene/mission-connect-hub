@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import EventRegistration from "./EventRegistration";
 
 // Define an event type
 type Event = {
@@ -55,6 +57,7 @@ const Events = () => {
     },
   ]);
   const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     fetchEvents();
@@ -87,7 +90,7 @@ const Events = () => {
   };
 
   return (
-    <section id="events" className="py-12 md:py-20 bg-secondary/30">
+    <section id="events" className="py-12 md:py-20 section-accent">
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">
@@ -130,7 +133,25 @@ const Events = () => {
                   
                   <p className="text-foreground/80 text-sm flex-1 mb-4">{event.description}</p>
                   
-                  <Button className="w-full mt-auto">Register Now</Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        className="w-full mt-auto"
+                        onClick={() => setSelectedEvent(event)}
+                      >
+                        Register Now
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      {selectedEvent && (
+                        <EventRegistration 
+                          eventId={selectedEvent.id} 
+                          eventTitle={selectedEvent.title}
+                          onClose={() => setSelectedEvent(null)}
+                        />
+                      )}
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </AnimatedSection>

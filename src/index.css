@@ -94,11 +94,19 @@
   }
   
   .section-alt {
-    @apply bg-accent/10;
+    @apply bg-blue-50;
   }
   
   .section-primary {
-    @apply bg-primary/5;
+    @apply bg-indigo-50;
+  }
+  
+  .section-accent {
+    @apply bg-purple-50;
+  }
+  
+  .section-light {
+    @apply bg-gray-50;
   }
   
   .card-highlight {
