@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,16 +14,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 220 47% 20%;
+    --primary: 220 75% 30%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 219 20% 95%;
+    --secondary: 219 70% 95%;
     --secondary-foreground: 222 47% 11.2%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 219 79% 66%;
+    --accent: 250 95% 65%;
     --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -73,7 +74,7 @@
   }
 
   .section-title {
-    @apply text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl;
+    @apply text-3xl md:text-4xl font-semibold mb-8 max-w-2xl text-foreground;
   }
 
   .section-subtitle {

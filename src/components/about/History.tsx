@@ -7,7 +7,7 @@ const History = () => {
     <section id="history" className="py-12 md:py-20">
       <div className="section-container">
         <AnimatedSection>
-          <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">
+          <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-accent/20 text-accent-foreground rounded-full">
             Who We Are
           </span>
           <h2 className="section-title">Our History</h2>
@@ -26,13 +26,13 @@ const History = () => {
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-secondary rounded-2xl -z-10"></div>
+              <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-accent rounded-2xl -z-10"></div>
             </div>
           </AnimatedSection>
 
           <AnimatedSection delay={200}>
             <div className="space-y-6">
-              <div className="glass p-6 rounded-xl">
+              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
                 <div className="flex items-start gap-4">
                   <HistoryIcon className="h-8 w-8 text-primary mt-1" />
                   <div>
@@ -44,7 +44,7 @@ const History = () => {
                 </div>
               </div>
 
-              <div className="glass p-6 rounded-xl">
+              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
                 <div className="flex items-start gap-4">
                   <BookOpen className="h-8 w-8 text-primary mt-1" />
                   <div>
@@ -56,7 +56,7 @@ const History = () => {
                 </div>
               </div>
 
-              <div className="glass p-6 rounded-xl">
+              <div className="glass p-6 rounded-xl border-l-4 border-l-primary">
                 <div className="flex items-start gap-4">
                   <HistoryIcon className="h-8 w-8 text-primary mt-1" />
                   <div>
