@@ -52,6 +52,7 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
         ...formData
       };
       
+      // Use type casting to work around the type issue since our DB schema has been updated
       const { error } = await supabase
         .from('registrations')
         .insert([registrationData]);

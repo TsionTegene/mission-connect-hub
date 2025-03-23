@@ -106,10 +106,14 @@ const AdminDashboard = () => {
 
   const fetchRegistrations = async () => {
     try {
+      // Use type assertion to handle the registration table
       const { data, error } = await supabase
         .from('registrations')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false }) as {
+          data: Registration[] | null;
+          error: any;
+        };
 
       if (error) throw error;
       setRegistrations(data || []);
