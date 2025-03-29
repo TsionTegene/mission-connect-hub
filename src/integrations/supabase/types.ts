@@ -9,6 +9,117 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          page_path: string
+          session_id: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          page_path: string
+          session_id: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          page_path?: string
+          session_id?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      content_blocks: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          image_url: string | null
+          order_index: number
+          page_id: string
+          section_id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          order_index?: number
+          page_id: string
+          section_id: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          order_index?: number
+          page_id?: string
+          section_id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      donations: {
+        Row: {
+          amount: number
+          currency: string
+          id: string
+          is_anonymous: boolean | null
+          notes: string | null
+          payment_intent_id: string | null
+          payment_method: string
+          payment_status: string
+          transaction_date: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          currency?: string
+          id?: string
+          is_anonymous?: boolean | null
+          notes?: string | null
+          payment_intent_id?: string | null
+          payment_method: string
+          payment_status: string
+          transaction_date?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          currency?: string
+          id?: string
+          is_anonymous?: boolean | null
+          notes?: string | null
+          payment_intent_id?: string | null
+          payment_method?: string
+          payment_status?: string
+          transaction_date?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           created_at: string
@@ -16,7 +127,9 @@ export type Database = {
           description: string | null
           id: string
           image: string | null
+          is_paid: boolean
           location: string
+          price: number | null
           time: string | null
           title: string
         }
@@ -26,7 +139,9 @@ export type Database = {
           description?: string | null
           id?: string
           image?: string | null
+          is_paid?: boolean
           location: string
+          price?: number | null
           time?: string | null
           title: string
         }
@@ -36,9 +151,35 @@ export type Database = {
           description?: string | null
           id?: string
           image?: string | null
+          is_paid?: boolean
           location?: string
+          price?: number | null
           time?: string | null
           title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
         }
         Relationships: []
       }

@@ -1,0 +1,100 @@
+
+/* Accessibility styles */
+
+/* High contrast mode */
+.high-contrast {
+  --background: #ffffff;
+  --foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --border: #000000;
+  --input: #ffffff;
+  --ring: #000000;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.high-contrast a,
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6 {
+  color: #000000;
+}
+
+.high-contrast button {
+  border: 1px solid #000000;
+}
+
+/* Night mode */
+.night-mode {
+  --background: #121212;
+  --foreground: #e0e0e0;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --card: #1e1e1e;
+  --card-foreground: #e0e0e0;
+  --border: #2a2a2a;
+  --input: #1e1e1e;
+  --ring: #2563eb;
+  color: #e0e0e0;
+  background-color: #121212;
+}
+
+/* Sepia mode for reading comfort */
+.sepia-mode {
+  --background: #f5efe0;
+  --foreground: #5f4b32;
+  --primary: #78350f;
+  --primary-foreground: #f5efe0;
+  --card: #f8f3e6;
+  --card-foreground: #5f4b32;
+  --border: #d3c6a6;
+  --input: #f8f3e6;
+  --ring: #78350f;
+  color: #5f4b32;
+  background-color: #f5efe0;
+}
+
+/* Focus indicator for keyboard navigation */
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Skip to content link for keyboard users */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Ensure proper contrast for all text */
+.text-muted-foreground {
+  color: #666666;
+}
+
+.high-contrast .text-muted-foreground {
+  color: #333333;
+}
+
+.night-mode .text-muted-foreground {
+  color: #a0a0a0;
+}
+
+.sepia-mode .text-muted-foreground {
+  color: #7d6547;
+}

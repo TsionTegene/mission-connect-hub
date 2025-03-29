@@ -6,6 +6,7 @@ import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Database } from "@/integrations/supabase/types";
+import { sendEventConfirmation } from "@/utils/email";
 
 type EventRegistrationProps = {
   eventId: string | number;
@@ -55,6 +56,9 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
         .insert(registrationData);
 
       if (error) throw error;
+      
+      // Send confirmation email
+      await sendEventConfirmation(formData.name, formData.email, eventTitle);
       
       toast.success("You have successfully registered for this event!");
       onClose();
