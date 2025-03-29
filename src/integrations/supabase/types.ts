@@ -159,6 +159,42 @@ export type Database = {
         }
         Relationships: []
       }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          event_id: string
+          id: string
+          payment_method: string
+          payment_status: string
+          transaction_id: string | null
+          user_email: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          event_id: string
+          id?: string
+          payment_method: string
+          payment_status: string
+          transaction_id?: string | null
+          user_email: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          event_id?: string
+          id?: string
+          payment_method?: string
+          payment_status?: string
+          transaction_id?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

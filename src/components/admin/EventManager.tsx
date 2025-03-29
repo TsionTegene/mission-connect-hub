@@ -24,6 +24,29 @@ import {
 type Event = Database["public"]["Tables"]["events"]["Row"];
 type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
 
+interface Payment {
+  id: string;
+  event_id: string;
+  user_email: string;
+  amount: number;
+  currency: string;
+  payment_status: string;
+  payment_method: string;
+  transaction_id: string | null;
+  created_at: string;
+}
+
+interface Registration {
+  id: string;
+  event_id: string;
+  event_title: string;
+  name: string;
+  email: string;
+  phone: string;
+  notes: string | null;
+  created_at: string;
+}
+
 const EventManager = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,8 +64,8 @@ const EventManager = () => {
   const [saving, setSaving] = useState(false);
   const [deleteEventId, setDeleteEventId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [payments, setPayments] = useState<any[]>([]);
-  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [viewingEventStats, setViewingEventStats] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,14 +110,23 @@ const EventManager = () => {
       
       setRegistrations(registrationsData || []);
       
-      // Fetch payments if any
-      const { data: paymentsData, error: paymentsError } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('event_id', eventId);
-        
-      if (paymentsError) throw paymentsError;
+      // Fetch payments using custom query
+      // We need to cast as any since the payments table is not in the TypeScript types yet
+      const paymentsResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${eventId}`,
+        {
+          headers: {
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       
+      if (!paymentsResponse.ok) {
+        throw new Error('Failed to fetch payments');
+      }
+      
+      const paymentsData = await paymentsResponse.json();
       setPayments(paymentsData || []);
     } catch (error) {
       console.error("Error fetching event stats:", error);
@@ -221,27 +253,45 @@ const EventManager = () => {
         if (regDeleteError) throw regDeleteError;
       }
       
-      // Check for payments
-      const { count: paymentsCount, error: paymentCountError } = await supabase
-        .from('payments')
-        .select('*', { count: 'exact', head: true })
-        .eq('event_id', id);
-        
-      if (paymentCountError) throw paymentCountError;
+      // Check for payments using fetch API since the payments table isn't in types
+      const paymentsResponse = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${id}&select=count`,
+        {
+          headers: {
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'count=exact',
+          },
+        }
+      );
+      
+      if (!paymentsResponse.ok) {
+        throw new Error('Failed to check payments');
+      }
+      
+      const paymentsCount = parseInt(paymentsResponse.headers.get('content-range')?.split('/')[1] || '0');
       
       // If payments exist, warn admin
-      if (paymentsCount && paymentsCount > 0) {
+      if (paymentsCount > 0) {
         if (!confirm(`This event has ${paymentsCount} payments. Are you sure you want to delete it? This will also delete all payment records.`)) {
           return;
         }
         
-        // Delete payments
-        const { error: paymentDeleteError } = await supabase
-          .from('payments')
-          .delete()
-          .eq('event_id', id);
-          
-        if (paymentDeleteError) throw paymentDeleteError;
+        // Delete payments using fetch API
+        const deleteResponse = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        
+        if (!deleteResponse.ok) {
+          throw new Error('Failed to delete payments');
+        }
       }
       
       // Finally delete the event
