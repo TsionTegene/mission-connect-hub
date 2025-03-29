@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -18,7 +17,9 @@ import DonationForm from "./components/DonationForm";
 import DonationSuccess from "./pages/DonationSuccess";
 import EventPayment from "./pages/EventPayment";
 import EventPaymentSuccess from "./pages/EventPaymentSuccess";
-import { trackPageView } from "./utils/analytics";
+
+// Import styles
+import "./styles/accessibility.css";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,8 @@ const AnalyticsTracker = () => {
   
   useEffect(() => {
     // Track page view when route changes
-    trackPageView(location.pathname);
+    // We can keep this part even though accessibility is removed
+    console.log("Page view:", location.pathname);
   }, [location]);
   
   return null;
@@ -65,7 +67,6 @@ const App = () => (
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
