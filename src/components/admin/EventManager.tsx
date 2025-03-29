@@ -6,10 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Calendar, MapPin, Clock, Calendar as CalendarIcon, X } from "lucide-react";
+import { Calendar, MapPin, Clock, Calendar as CalendarIcon, X, Edit, Trash2, DollarSign } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Database } from "@/integrations/supabase/types";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type Event = Database["public"]["Tables"]["events"]["Row"];
 type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
@@ -29,10 +39,21 @@ const EventManager = () => {
   });
   const [editing, setEditing] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [deleteEventId, setDeleteEventId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [payments, setPayments] = useState<any[]>([]);
+  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [viewingEventStats, setViewingEventStats] = useState<string | null>(null);
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (viewingEventStats) {
+      fetchEventStats(viewingEventStats);
+    }
+  }, [viewingEventStats]);
 
   const fetchEvents = async () => {
     try {
@@ -51,6 +72,33 @@ const EventManager = () => {
       toast.error("Failed to load events");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchEventStats = async (eventId: string) => {
+    try {
+      // Fetch registrations
+      const { data: registrationsData, error: registrationsError } = await supabase
+        .from('registrations')
+        .select('*')
+        .eq('event_id', eventId);
+        
+      if (registrationsError) throw registrationsError;
+      
+      setRegistrations(registrationsData || []);
+      
+      // Fetch payments if any
+      const { data: paymentsData, error: paymentsError } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('event_id', eventId);
+        
+      if (paymentsError) throw paymentsError;
+      
+      setPayments(paymentsData || []);
+    } catch (error) {
+      console.error("Error fetching event stats:", error);
+      toast.error("Failed to load event statistics");
     }
   };
 
@@ -145,14 +193,58 @@ const EventManager = () => {
       price: event.price,
     });
     setEditing(event.id);
+    setViewingEventStats(null); // Close stats view if open
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this event?")) {
-      return;
-    }
-    
     try {
+      // First check for registrations and payments
+      const { count: registrationsCount, error: countError } = await supabase
+        .from('registrations')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', id);
+        
+      if (countError) throw countError;
+      
+      // If registrations exist, warn admin
+      if (registrationsCount && registrationsCount > 0) {
+        if (!confirm(`This event has ${registrationsCount} registrations. Are you sure you want to delete it? This will also delete all registrations.`)) {
+          return;
+        }
+        
+        // Delete registrations first
+        const { error: regDeleteError } = await supabase
+          .from('registrations')
+          .delete()
+          .eq('event_id', id);
+          
+        if (regDeleteError) throw regDeleteError;
+      }
+      
+      // Check for payments
+      const { count: paymentsCount, error: paymentCountError } = await supabase
+        .from('payments')
+        .select('*', { count: 'exact', head: true })
+        .eq('event_id', id);
+        
+      if (paymentCountError) throw paymentCountError;
+      
+      // If payments exist, warn admin
+      if (paymentsCount && paymentsCount > 0) {
+        if (!confirm(`This event has ${paymentsCount} payments. Are you sure you want to delete it? This will also delete all payment records.`)) {
+          return;
+        }
+        
+        // Delete payments
+        const { error: paymentDeleteError } = await supabase
+          .from('payments')
+          .delete()
+          .eq('event_id', id);
+          
+        if (paymentDeleteError) throw paymentDeleteError;
+      }
+      
+      // Finally delete the event
       const { error } = await supabase
         .from('events')
         .delete()
@@ -162,10 +254,14 @@ const EventManager = () => {
       
       toast.success("Event deleted successfully");
       fetchEvents();
+      setViewingEventStats(null);
     } catch (error) {
       console.error("Error deleting event:", error);
       toast.error("Failed to delete event");
     }
+    
+    setDeleteDialogOpen(false);
+    setDeleteEventId(null);
   };
 
   const resetForm = () => {
@@ -180,6 +276,20 @@ const EventManager = () => {
       price: null,
     });
     setEditing(null);
+  };
+
+  const confirmDelete = (id: string) => {
+    setDeleteEventId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const toggleEventStats = (eventId: string) => {
+    if (viewingEventStats === eventId) {
+      setViewingEventStats(null);
+    } else {
+      setViewingEventStats(eventId);
+      setEditing(null); // Close edit form if open
+    }
   };
 
   return (
@@ -324,81 +434,187 @@ const EventManager = () => {
       ) : (
         <div className="space-y-4">
           {events.map((event) => (
-            <Card key={event.id} className="overflow-hidden">
-              <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row">
-                  {event.image && (
-                    <div className="w-full md:w-1/4 h-48 md:h-auto">
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="flex-1 p-6">
-                    <div className="flex justify-between items-start">
-                      <h3 className="text-xl font-medium">{event.title}</h3>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(event)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive"
-                          onClick={() => handleDelete(event.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
+            <div key={event.id}>
+              <Card className="overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="flex flex-col md:flex-row">
+                    {event.image && (
+                      <div className="w-full md:w-1/4 h-48 md:h-auto">
+                        <img
+                          src={event.image}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                    </div>
+                    )}
                     
-                    <div className="mt-2 space-y-1 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span>{event.date}</span>
+                    <div className="flex-1 p-6">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-xl font-medium">{event.title}</h3>
+                        
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => toggleEventStats(event.id)}
+                          >
+                            {viewingEventStats === event.id ? "Hide Stats" : "View Stats"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEdit(event)}
+                          >
+                            <Edit className="h-4 w-4" />
+                            <span className="ml-1 hidden sm:inline">Edit</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive"
+                            onClick={() => confirmDelete(event.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="ml-1 hidden sm:inline">Delete</span>
+                          </Button>
+                        </div>
                       </div>
                       
-                      {event.time && (
+                      <div className="mt-2 space-y-1 text-sm text-muted-foreground">
                         <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-2" />
-                          <span>{event.time}</span>
+                          <Calendar className="h-4 w-4 mr-2" />
+                          <span>{event.date}</span>
+                        </div>
+                        
+                        {event.time && (
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-2" />
+                            <span>{event.time}</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span>{event.location}</span>
+                        </div>
+                      </div>
+                      
+                      {event.is_paid && (
+                        <div className="mt-2">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                            <DollarSign className="h-3 w-3 mr-1" />
+                            Paid Event: ${event.price}
+                          </span>
                         </div>
                       )}
                       
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        <span>{event.location}</span>
-                      </div>
+                      {event.description && (
+                        <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
+                          {event.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Event statistics section */}
+              {viewingEventStats === event.id && (
+                <div className="mt-2 bg-card rounded-lg p-6 border">
+                  <h4 className="text-md font-medium mb-4">Event Statistics</h4>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h5 className="font-medium mb-2">Registrations ({registrations.length})</h5>
+                      {registrations.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No registrations yet.</p>
+                      ) : (
+                        <div className="max-h-60 overflow-y-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b">
+                                <th className="text-left font-medium py-2">Name</th>
+                                <th className="text-left font-medium py-2">Email</th>
+                                <th className="text-left font-medium py-2">Phone</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {registrations.map((reg) => (
+                                <tr key={reg.id} className="border-b border-muted">
+                                  <td className="py-2">{reg.name}</td>
+                                  <td className="py-2">{reg.email}</td>
+                                  <td className="py-2">{reg.phone}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                     </div>
                     
                     {event.is_paid && (
-                      <div className="mt-2">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                          Paid Event: ${event.price}
-                        </span>
+                      <div>
+                        <h5 className="font-medium mb-2">Payments ({payments.length})</h5>
+                        {payments.length === 0 ? (
+                          <p className="text-sm text-muted-foreground">No payments yet.</p>
+                        ) : (
+                          <div className="max-h-60 overflow-y-auto">
+                            <table className="w-full text-sm">
+                              <thead>
+                                <tr className="border-b">
+                                  <th className="text-left font-medium py-2">Email</th>
+                                  <th className="text-left font-medium py-2">Amount</th>
+                                  <th className="text-left font-medium py-2">Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {payments.map((payment) => (
+                                  <tr key={payment.id} className="border-b border-muted">
+                                    <td className="py-2">{payment.user_email}</td>
+                                    <td className="py-2">${payment.amount}</td>
+                                    <td className="py-2">
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        {payment.payment_status}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                            
+                            <div className="mt-4 p-3 bg-muted rounded">
+                              <p className="text-sm font-medium">Total Revenue: ${payments.reduce((sum, payment) => sum + (payment.amount || 0), 0).toFixed(2)}</p>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    
-                    {event.description && (
-                      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
-                        {event.description}
-                      </p>
                     )}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           ))}
         </div>
       )}
+      
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              event and all associated registrations and payments.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteEventId(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteEventId && handleDelete(deleteEventId)} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

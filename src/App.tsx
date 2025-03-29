@@ -16,11 +16,9 @@ import Auth from "./components/Auth";
 import UserProfile from "./components/UserProfile";
 import DonationForm from "./components/DonationForm";
 import DonationSuccess from "./pages/DonationSuccess";
-import AccessibilityWidget from "./components/AccessibilityWidget";
+import EventPayment from "./pages/EventPayment";
+import EventPaymentSuccess from "./pages/EventPaymentSuccess";
 import { trackPageView } from "./utils/analytics";
-
-// Import accessibility styles
-import "./styles/accessibility.css";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +52,6 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <AnalyticsTracker />
-            <AccessibilityWidget />
             
             <Routes>
               <Route path="/" element={<Index />} />
@@ -63,6 +60,8 @@ const App = () => (
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/donate" element={<DonationForm />} />
               <Route path="/donation-success" element={<DonationSuccess />} />
+              <Route path="/event-payment/:eventId" element={<EventPayment />} />
+              <Route path="/event-payment-success" element={<EventPaymentSuccess />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import { Calendar, MapPin, Clock, DollarSign } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -63,8 +63,8 @@ const Events = () => {
             image:
               "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
             created_at: new Date().toISOString(),
-            is_paid: false,
-            price: null
+            is_paid: true,
+            price: 250
           },
           {
             id: "3",
@@ -128,32 +128,47 @@ const Events = () => {
                     </div>
                   )}
                   
-                  <div className="flex items-center mb-4 text-sm text-foreground/80">
+                  <div className="flex items-center mb-2 text-sm text-foreground/80">
                     <MapPin className="h-4 w-4 mr-2" />
                     <span>{event.location}</span>
                   </div>
                   
+                  {event.is_paid && event.price && (
+                    <div className="flex items-center mb-2 text-sm font-medium">
+                      <DollarSign className="h-4 w-4 mr-2 text-primary" />
+                      <span>${event.price} USD</span>
+                    </div>
+                  )}
+                  
                   <p className="text-foreground/80 text-sm flex-1 mb-4">{event.description || ""}</p>
                   
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button 
-                        className="w-full mt-auto"
-                        onClick={() => setSelectedEvent(event)}
-                      >
-                        Register Now
+                  {event.is_paid && event.price ? (
+                    <Link to={`/event-payment/${event.id}`}>
+                      <Button className="w-full mt-auto">
+                        Register & Pay
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      {selectedEvent && (
-                        <EventRegistration 
-                          eventId={selectedEvent.id} 
-                          eventTitle={selectedEvent.title}
-                          onClose={() => setSelectedEvent(null)}
-                        />
-                      )}
-                    </DialogContent>
-                  </Dialog>
+                    </Link>
+                  ) : (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button 
+                          className="w-full mt-auto"
+                          onClick={() => setSelectedEvent(event)}
+                        >
+                          Register Now
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        {selectedEvent && (
+                          <EventRegistration 
+                            eventId={selectedEvent.id} 
+                            eventTitle={selectedEvent.title}
+                            onClose={() => setSelectedEvent(null)}
+                          />
+                        )}
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
               </div>
             </AnimatedSection>
