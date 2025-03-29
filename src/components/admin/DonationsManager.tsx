@@ -324,7 +324,7 @@ const DonationsManager = () => {
                     </div>
                     
                     <Badge
-                      variant={donation.payment_status === "succeeded" ? "success" : "outline"}
+                      variant={donation.payment_status === "succeeded" ? "default" : "outline"}
                     >
                       {donation.payment_status}
                     </Badge>

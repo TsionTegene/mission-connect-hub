@@ -48,7 +48,9 @@ const Events = () => {
               "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
             image:
               "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            is_paid: false,
+            price: null
           },
           {
             id: "2",
@@ -60,7 +62,9 @@ const Events = () => {
               "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
             image:
               "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            is_paid: false,
+            price: null
           },
           {
             id: "3",
@@ -72,7 +76,9 @@ const Events = () => {
               "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
             image:
               "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            is_paid: false,
+            price: null
           },
         ]);
       }
