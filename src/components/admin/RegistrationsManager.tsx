@@ -62,20 +62,32 @@ const RegistrationsManager = () => {
         .select('*')
         .order('created_at', { ascending: false });
         
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching registrations:", error);
+        throw error;
+      }
       
-      setRegistrations(data || []);
-      setFilteredRegistrations(data || []);
+      console.log("Fetched registrations:", data);
       
-      // Extract unique events
-      const events = new Map();
-      data?.forEach(reg => {
-        if (!events.has(reg.event_id)) {
-          events.set(reg.event_id, { id: reg.event_id, title: reg.event_title });
-        }
-      });
-      
-      setUniqueEvents(Array.from(events.values()));
+      if (data && data.length > 0) {
+        setRegistrations(data);
+        setFilteredRegistrations(data);
+        
+        // Extract unique events
+        const events = new Map();
+        data.forEach(reg => {
+          if (!events.has(reg.event_id)) {
+            events.set(reg.event_id, { id: reg.event_id, title: reg.event_title });
+          }
+        });
+        
+        setUniqueEvents(Array.from(events.values()));
+      } else {
+        console.log("No registrations found");
+        setRegistrations([]);
+        setFilteredRegistrations([]);
+        setUniqueEvents([]);
+      }
     } catch (error) {
       console.error("Error fetching registrations:", error);
       toast.error("Failed to load registrations");
@@ -148,6 +160,10 @@ const RegistrationsManager = () => {
               </option>
             ))}
           </select>
+          
+          <Button variant="outline" onClick={fetchRegistrations} size="sm">
+            Refresh
+          </Button>
         </div>
       </div>
       
