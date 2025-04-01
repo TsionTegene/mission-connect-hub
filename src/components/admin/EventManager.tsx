@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -110,23 +109,14 @@ const EventManager = () => {
       
       setRegistrations(registrationsData || []);
       
-      // Fetch payments using custom query
-      // We need to cast as any since the payments table is not in the TypeScript types yet
-      const paymentsResponse = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${eventId}`,
-        {
-          headers: {
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      // Fetch payments directly from Supabase
+      const { data: paymentsData, error: paymentsError } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('event_id', eventId);
       
-      if (!paymentsResponse.ok) {
-        throw new Error('Failed to fetch payments');
-      }
+      if (paymentsError) throw paymentsError;
       
-      const paymentsData = await paymentsResponse.json();
       setPayments(paymentsData || []);
     } catch (error) {
       console.error("Error fetching event stats:", error);
