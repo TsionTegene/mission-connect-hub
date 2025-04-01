@@ -5,9 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, FileText, Search } from "lucide-react";
+import { Mail, Phone, FileText, Search, Trash2, Send } from "lucide-react";
 import { toast } from "sonner";
 import { sendEventConfirmation } from "@/utils/email";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type Registration = {
   id: string;
@@ -27,6 +37,8 @@ const RegistrationsManager = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<string>("all");
   const [uniqueEvents, setUniqueEvents] = useState<{id: string, title: string}[]>([]);
+  const [registrationToDelete, setRegistrationToDelete] = useState<Registration | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchRegistrations();
@@ -111,21 +123,26 @@ const RegistrationsManager = () => {
     }
   };
 
-  const handleDeleteRegistration = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this registration?")) {
-      return;
-    }
+  const openDeleteDialog = (registration: Registration) => {
+    setRegistrationToDelete(registration);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteRegistration = async () => {
+    if (!registrationToDelete) return;
     
     try {
       const { error } = await supabase
         .from('registrations')
         .delete()
-        .eq('id', id);
+        .eq('id', registrationToDelete.id);
         
       if (error) throw error;
       
       toast.success("Registration deleted successfully");
       fetchRegistrations();
+      setDeleteDialogOpen(false);
+      setRegistrationToDelete(null);
     } catch (error) {
       console.error("Error deleting registration:", error);
       toast.error("Failed to delete registration");
@@ -232,14 +249,16 @@ const RegistrationsManager = () => {
                       className="flex-1 md:flex-auto"
                       onClick={() => handleSendReminder(registration)}
                     >
+                      <Send className="h-4 w-4 mr-2" />
                       Send Reminder
                     </Button>
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="flex-1 md:flex-auto text-destructive hover:text-destructive"
-                      onClick={() => handleDeleteRegistration(registration.id)}
+                      className="flex-1 md:flex-auto text-destructive hover:bg-destructive/10"
+                      onClick={() => openDeleteDialog(registration)}
                     >
+                      <Trash2 className="h-4 w-4 mr-2" />
                       Delete
                     </Button>
                   </div>
@@ -249,6 +268,27 @@ const RegistrationsManager = () => {
           ))}
         </div>
       )}
+      
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Registration</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {registrationToDelete?.name}'s registration for {registrationToDelete?.event_title}? 
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteRegistration}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
