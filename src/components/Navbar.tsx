@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Menu, X, ShieldCheck, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,7 +25,7 @@ const Navbar = () => {
   ];
   
   const aboutLinks = [
-    { name: "About Us", href: "/about", hash: "" },
+    { name: "About", href: "/about", hash: "" },
     { name: "Mission", href: "/#mission", hash: "mission" },
   ];
   
@@ -35,7 +36,7 @@ const Navbar = () => {
   
   const involvementLinks = [
     { name: "Compassion", href: "/#compassion-projects", hash: "compassion-projects" },
-    { name: "Get Involved", href: "/#get-involved", hash: "get-involved" },
+    { name: "Volunteer", href: "/#get-involved", hash: "get-involved" },
     { name: "Events", href: "/#events", hash: "events" }
   ];
 
@@ -112,10 +113,10 @@ const Navbar = () => {
               </li>
             ))}
             
-            {/* About & Mission Dropdown */}
+            {/* About Dropdown */}
             <li className="relative group">
               <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                About & Mission
+                About
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -134,10 +135,10 @@ const Navbar = () => {
               </div>
             </li>
             
-            {/* Ministries & Programs Dropdown */}
+            {/* Ministries Dropdown */}
             <li className="relative group">
               <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                Ministries & Programs
+                Ministries
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -156,10 +157,10 @@ const Navbar = () => {
               </div>
             </li>
             
-            {/* Compassion & Get Involved Dropdown */}
+            {/* Involvement Dropdown */}
             <li className="relative group">
               <button className="text-sm text-foreground/90 hover:text-primary transition-colors duration-200 flex items-center gap-1">
-                Compassion & Get Involved
+                Involvement
                 <ChevronDown className="h-4 w-4 opacity-70" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
@@ -225,9 +226,9 @@ const Navbar = () => {
             </Link>
           ))}
           
-          {/* About & Mission section */}
+          {/* About section */}
           <div className="pt-2">
-            <p className="py-1 text-sm font-semibold text-accent">About & Mission</p>
+            <p className="py-1 text-sm font-semibold text-accent">About</p>
             {aboutLinks.map((link) => (
               <Link
                 key={link.name}
@@ -240,9 +241,9 @@ const Navbar = () => {
             ))}
           </div>
           
-          {/* Ministries & Programs section */}
+          {/* Ministries section */}
           <div className="pt-2">
-            <p className="py-1 text-sm font-semibold text-accent">Ministries & Programs</p>
+            <p className="py-1 text-sm font-semibold text-accent">Ministries</p>
             {ministriesLinks.map((link) => (
               <Link
                 key={link.name}
@@ -255,9 +256,9 @@ const Navbar = () => {
             ))}
           </div>
           
-          {/* Compassion & Get Involved section */}
+          {/* Involvement section */}
           <div className="pt-2">
-            <p className="py-1 text-sm font-semibold text-accent">Compassion & Get Involved</p>
+            <p className="py-1 text-sm font-semibold text-accent">Involvement</p>
             {involvementLinks.map((link) => (
               <Link
                 key={link.name}

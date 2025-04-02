@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Calendar, MapPin, Clock, Calendar as CalendarIcon, X, Edit, Trash2, DollarSign } from "lucide-react";
+import { Calendar, MapPin, Clock, Calendar as CalendarIcon, X, Edit, Trash2, DollarSign, Mail } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Database } from "@/integrations/supabase/types";
@@ -19,6 +19,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type Event = Database["public"]["Tables"]["events"]["Row"];
 type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
@@ -66,6 +74,8 @@ const EventManager = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [viewingEventStats, setViewingEventStats] = useState<string | null>(null);
+  const [deleteRegistrationId, setDeleteRegistrationId] = useState<string | null>(null);
+  const [deleteRegistrationDialogOpen, setDeleteRegistrationDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -332,6 +342,37 @@ const EventManager = () => {
     }
   };
 
+  const handleDeleteRegistration = async (registrationId: string) => {
+    try {
+      const { error } = await supabase
+        .from('registrations')
+        .delete()
+        .eq('id', registrationId);
+        
+      if (error) throw error;
+      
+      // Remove from local state
+      setRegistrations(prev => prev.filter(reg => reg.id !== registrationId));
+      toast.success("Registration deleted successfully");
+    } catch (error) {
+      console.error("Error deleting registration:", error);
+      toast.error("Failed to delete registration");
+    }
+    
+    setDeleteRegistrationDialogOpen(false);
+    setDeleteRegistrationId(null);
+  };
+
+  const confirmDeleteRegistration = (id: string) => {
+    setDeleteRegistrationId(id);
+    setDeleteRegistrationDialogOpen(true);
+  };
+
+  const handleContactRegistrant = (email: string) => {
+    // Open default mail client
+    window.location.href = `mailto:${email}`;
+  };
+
   return (
     <div className="space-y-8">
       <div className="bg-card rounded-lg p-6 border">
@@ -570,24 +611,44 @@ const EventManager = () => {
                         <p className="text-sm text-muted-foreground">No registrations yet.</p>
                       ) : (
                         <div className="max-h-60 overflow-y-auto">
-                          <table className="w-full text-sm">
-                            <thead>
-                              <tr className="border-b">
-                                <th className="text-left font-medium py-2">Name</th>
-                                <th className="text-left font-medium py-2">Email</th>
-                                <th className="text-left font-medium py-2">Phone</th>
-                              </tr>
-                            </thead>
-                            <tbody>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
                               {registrations.map((reg) => (
-                                <tr key={reg.id} className="border-b border-muted">
-                                  <td className="py-2">{reg.name}</td>
-                                  <td className="py-2">{reg.email}</td>
-                                  <td className="py-2">{reg.phone}</td>
-                                </tr>
+                                <TableRow key={reg.id}>
+                                  <TableCell>{reg.name}</TableCell>
+                                  <TableCell>{reg.email}</TableCell>
+                                  <TableCell>{reg.phone}</TableCell>
+                                  <TableCell className="text-right">
+                                    <div className="flex items-center justify-end space-x-2">
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm"
+                                        onClick={() => handleContactRegistrant(reg.email)}
+                                      >
+                                        <Mail className="h-4 w-4" />
+                                      </Button>
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm"
+                                        className="text-destructive"
+                                        onClick={() => confirmDeleteRegistration(reg.id)}
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
                               ))}
-                            </tbody>
-                          </table>
+                            </TableBody>
+                          </Table>
                         </div>
                       )}
                     </div>
@@ -599,28 +660,28 @@ const EventManager = () => {
                           <p className="text-sm text-muted-foreground">No payments yet.</p>
                         ) : (
                           <div className="max-h-60 overflow-y-auto">
-                            <table className="w-full text-sm">
-                              <thead>
-                                <tr className="border-b">
-                                  <th className="text-left font-medium py-2">Email</th>
-                                  <th className="text-left font-medium py-2">Amount</th>
-                                  <th className="text-left font-medium py-2">Status</th>
-                                </tr>
-                              </thead>
-                              <tbody>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Email</TableHead>
+                                  <TableHead>Amount</TableHead>
+                                  <TableHead>Status</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
                                 {payments.map((payment) => (
-                                  <tr key={payment.id} className="border-b border-muted">
-                                    <td className="py-2">{payment.user_email}</td>
-                                    <td className="py-2">${payment.amount}</td>
-                                    <td className="py-2">
+                                  <TableRow key={payment.id}>
+                                    <TableCell>{payment.user_email}</TableCell>
+                                    <TableCell>${payment.amount}</TableCell>
+                                    <TableCell>
                                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                                         {payment.payment_status}
                                       </span>
-                                    </td>
-                                  </tr>
+                                    </TableCell>
+                                  </TableRow>
                                 ))}
-                              </tbody>
-                            </table>
+                              </TableBody>
+                            </Table>
                             
                             <div className="mt-4 p-3 bg-muted rounded">
                               <p className="text-sm font-medium">Total Revenue: ${payments.reduce((sum, payment) => sum + (payment.amount || 0), 0).toFixed(2)}</p>
@@ -637,7 +698,7 @@ const EventManager = () => {
         </div>
       )}
       
-      {/* Delete confirmation dialog */}
+      {/* Delete event confirmation dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -650,6 +711,24 @@ const EventManager = () => {
           <AlertDialogFooter>
             <AlertDialogCancel onClick={() => setDeleteEventId(null)}>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => deleteEventId && handleDelete(deleteEventId)} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Delete registration confirmation dialog */}
+      <AlertDialog open={deleteRegistrationDialogOpen} onOpenChange={setDeleteRegistrationDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Registration</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this registration? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteRegistrationId(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteRegistrationId && handleDeleteRegistration(deleteRegistrationId)} className="bg-destructive text-destructive-foreground">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
