@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const AdminLogin = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -15,7 +16,28 @@ const AdminLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session && data.session.user?.email?.includes("admin")) {
+        // Already logged in as admin, redirect to dashboard
+        navigate("/admin/dashboard");
+      }
+    };
+    
+    checkSession();
+  }, [navigate]);
+
+  // Redirect if user and isAdmin are already set (from useAuth)
+  useEffect(() => {
+    if (user && isAdmin) {
+      navigate("/admin/dashboard");
+    }
+  }, [user, isAdmin, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +54,16 @@ const AdminLogin = () => {
         return;
       }
 
-      // Successfully logged in
-      toast.success("Logged in successfully");
-      navigate("/admin/dashboard");
+      // Check if the user is an admin (email contains 'admin')
+      if (data.user && data.user.email?.includes("admin")) {
+        // Successfully logged in as admin
+        toast.success("Logged in successfully");
+        navigate("/admin/dashboard");
+      } else {
+        // Not an admin
+        await supabase.auth.signOut();
+        toast.error("You do not have admin privileges");
+      }
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("An unexpected error occurred");
@@ -48,6 +77,13 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
+      // First check if email contains 'admin' for admin privileges
+      if (!email.includes("admin")) {
+        toast.error("Admin accounts must contain 'admin' in the email address");
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -58,7 +94,7 @@ const AdminLogin = () => {
         return;
       }
 
-      toast.success("Account created successfully. Please check your email for verification.");
+      toast.success("Admin account created successfully. Please check your email for verification.");
       setActiveTab("login");
     } catch (error) {
       console.error("Unexpected error during signup:", error);

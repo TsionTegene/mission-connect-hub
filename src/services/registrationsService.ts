@@ -35,12 +35,17 @@ export const fetchRegistrations = async (): Promise<Registration[]> => {
 
 export const deleteRegistration = async (id: string): Promise<boolean> => {
   try {
+    console.log("Deleting registration with ID:", id);
+    
     const { error } = await supabase
       .from('registrations')
       .delete()
       .eq('id', id);
       
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase deletion error:", error);
+      throw error;
+    }
     
     toast.success("Registration deleted successfully");
     return true;

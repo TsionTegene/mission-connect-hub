@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { sendEventConfirmation } from "@/utils/email";
@@ -98,7 +99,9 @@ const RegistrationsManager = () => {
   const handleDeleteRegistration = async () => {
     if (!registrationToDelete) return;
     
+    console.log("Deleting registration:", registrationToDelete.id);
     const success = await deleteRegistrationService(registrationToDelete.id);
+    
     if (success) {
       // Remove from local state after successful deletion
       setRegistrations(prev => prev.filter(reg => reg.id !== registrationToDelete.id));

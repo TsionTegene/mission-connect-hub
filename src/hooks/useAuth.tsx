@@ -31,18 +31,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+        console.log("Auth state change:", event, currentSession?.user?.email);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
-        setIsAdmin(currentSession?.user?.email?.includes("admin") ?? false);
+        
+        // Check if user is admin (based on email containing 'admin')
+        const userIsAdmin = currentSession?.user?.email?.includes("admin") ?? false;
+        setIsAdmin(userIsAdmin);
+        
         setLoading(false);
       }
     );
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log("Initial session check:", currentSession?.user?.email);
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
-      setIsAdmin(currentSession?.user?.email?.includes("admin") ?? false);
+      
+      // Check if user is admin (based on email containing 'admin')
+      const userIsAdmin = currentSession?.user?.email?.includes("admin") ?? false;
+      setIsAdmin(userIsAdmin);
+      
       setLoading(false);
     });
 
