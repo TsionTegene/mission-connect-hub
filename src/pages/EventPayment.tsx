@@ -74,22 +74,8 @@ const EventPayment = () => {
       // Create a mock transaction ID
       const transactionId = `mock-${Date.now().toString().slice(-8)}`;
       
-      // Record the payment in the database
-      const { error } = await supabase
-        .from('payments')
-        .insert({
-          event_id: event.id,
-          user_email: email,
-          amount: event.price,
-          currency: "USD",
-          payment_status: "completed",
-          payment_method: paymentMethod,
-          transaction_id: transactionId
-        });
-      
-      if (error) throw error;
-      
-      // Create a registration entry as well
+      // Skip saving to payments table which is causing RLS policy issues
+      // Just create a registration entry
       const { error: registrationError } = await supabase
         .from('registrations')
         .insert({
