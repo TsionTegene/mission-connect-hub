@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,7 +57,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </header>
-
+      
       <main className="container mx-auto px-4 py-6">
         <Tabs 
           defaultValue="events" 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { sendEventConfirmation } from "@/utils/email";
@@ -101,7 +100,10 @@ const RegistrationsManager = () => {
     
     const success = await deleteRegistrationService(registrationToDelete.id);
     if (success) {
-      await fetchRegistrations();
+      // Remove from local state after successful deletion
+      setRegistrations(prev => prev.filter(reg => reg.id !== registrationToDelete.id));
+      setFilteredRegistrations(prev => prev.filter(reg => reg.id !== registrationToDelete.id));
+      
       setDeleteDialogOpen(false);
       setRegistrationToDelete(null);
     }

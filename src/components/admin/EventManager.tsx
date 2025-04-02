@@ -253,23 +253,15 @@ const EventManager = () => {
         if (regDeleteError) throw regDeleteError;
       }
       
-      // Check for payments using fetch API since the payments table isn't in types
-      const paymentsResponse = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${id}&select=count`,
-        {
-          headers: {
-            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-            'Content-Type': 'application/json',
-            'Prefer': 'count=exact',
-          },
-        }
-      );
+      // Check for payments 
+      const { data: paymentsData, error: paymentsError } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('event_id', id);
       
-      if (!paymentsResponse.ok) {
-        throw new Error('Failed to check payments');
-      }
+      if (paymentsError) throw paymentsError;
       
-      const paymentsCount = parseInt(paymentsResponse.headers.get('content-range')?.split('/')[1] || '0');
+      const paymentsCount = paymentsData?.length || 0;
       
       // If payments exist, warn admin
       if (paymentsCount > 0) {
@@ -277,21 +269,13 @@ const EventManager = () => {
           return;
         }
         
-        // Delete payments using fetch API
-        const deleteResponse = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/payments?event_id=eq.${id}`,
-          {
-            method: 'DELETE',
-            headers: {
-              'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        
-        if (!deleteResponse.ok) {
-          throw new Error('Failed to delete payments');
-        }
+        // Delete payments
+        const { error: paymentDeleteError } = await supabase
+          .from('payments')
+          .delete()
+          .eq('event_id', id);
+          
+        if (paymentDeleteError) throw paymentDeleteError;
       }
       
       // Finally delete the event
@@ -303,8 +287,13 @@ const EventManager = () => {
       if (error) throw error;
       
       toast.success("Event deleted successfully");
-      fetchEvents();
-      setViewingEventStats(null);
+      
+      // Remove from local state
+      setEvents(prev => prev.filter(event => event.id !== id));
+      
+      if (viewingEventStats === id) {
+        setViewingEventStats(null);
+      }
     } catch (error) {
       console.error("Error deleting event:", error);
       toast.error("Failed to delete event");
