@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,12 +13,12 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User } from "@supabase/supabase-js";
 import { ArrowLeft } from "lucide-react";
+import { v4 as uuidv4 } from 'uuid';
 
 export type AuthProps = {
   redirectTo?: string;
-  onAuthSuccess?: (user: User) => void;
+  onAuthSuccess?: (user: any) => void;
 };
 
 const Auth = ({ redirectTo = "/", onAuthSuccess }: AuthProps) => {
@@ -33,8 +32,8 @@ const Auth = ({ redirectTo = "/", onAuthSuccess }: AuthProps) => {
   // Check for existing session
   useEffect(() => {
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) {
+      const savedUser = localStorage.getItem('mockUser');
+      if (savedUser) {
         // Already logged in, redirect
         navigate(redirectTo);
       }
@@ -48,21 +47,31 @@ const Auth = ({ redirectTo = "/", onAuthSuccess }: AuthProps) => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error("Login failed: " + error.message);
+      // Mock login operation
+      console.log("Mock login with:", email, password);
+      
+      // Simple validation
+      if (!email || !password) {
+        toast.error("Email and password are required");
+        setLoading(false);
         return;
       }
-
+      
+      // Mock successful login
+      const mockUser = {
+        id: uuidv4(),
+        email: email,
+        full_name: email.split('@')[0]
+      };
+      
+      // Store in localStorage for persistence
+      localStorage.setItem('mockUser', JSON.stringify(mockUser));
+      
       // Successfully logged in
       toast.success("Logged in successfully");
       
-      if (onAuthSuccess && data.user) {
-        onAuthSuccess(data.user);
+      if (onAuthSuccess) {
+        onAuthSuccess(mockUser);
       }
       
       navigate(redirectTo);
@@ -79,22 +88,17 @@ const Auth = ({ redirectTo = "/", onAuthSuccess }: AuthProps) => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) {
-        toast.error("Signup failed: " + error.message);
+      // Mock signup operation
+      console.log("Mock signup with:", email, password, fullName);
+      
+      // Simple validation
+      if (!email || !password || !fullName) {
+        toast.error("All fields are required");
+        setLoading(false);
         return;
       }
-
-      toast.success("Account created successfully. Please check your email for verification.");
+      
+      toast.success("Account created successfully. You can now log in.");
       setActiveTab("login");
     } catch (error) {
       console.error("Unexpected error during signup:", error);

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,14 +5,56 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar, Clock, MapPin, DollarSign } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import SEO from "@/components/SEO";
+
+// Mock event data type
+type Event = {
+  id: string;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  description?: string;
+  image?: string;
+  is_paid: boolean;
+  price: number | null;
+};
+
+// Mock events data
+const mockEvents: Event[] = [
+  {
+    id: "1",
+    title: "Community Prayer Breakfast",
+    date: "June 15, 2025",
+    time: "8:00 AM - 10:00 AM",
+    location: "Mulu Wongel Church",
+    description:
+      "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
+    image:
+      "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
+    is_paid: false,
+    price: null
+  },
+  {
+    id: "2",
+    title: "Mission Trip to Omo",
+    date: "March 13-17, 2025",
+    time: "All Day",
+    location: "South Omo, Jinka",
+    description:
+      "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
+    image:
+      "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
+    is_paid: true,
+    price: 250
+  }
+];
 
 const EventPayment = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
   
@@ -30,28 +71,25 @@ const EventPayment = () => {
   
   const fetchEvent = async (id: string) => {
     try {
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .eq('id', id)
-        .single();
+      setLoading(true);
       
-      if (error) throw error;
+      // Find event in mock data
+      const foundEvent = mockEvents.find(event => event.id === id);
       
-      if (!data) {
+      if (!foundEvent) {
         toast.error("Event not found");
         navigate("/");
         return;
       }
       
       // If event is not paid, redirect to home
-      if (!data.is_paid) {
+      if (!foundEvent.is_paid) {
         toast.error("This event does not require payment");
         navigate("/");
         return;
       }
       
-      setEvent(data);
+      setEvent(foundEvent);
     } catch (error) {
       console.error("Error fetching event:", error);
       toast.error("Failed to load event details");
@@ -74,30 +112,27 @@ const EventPayment = () => {
       // Create a mock transaction ID
       const transactionId = `mock-${Date.now().toString().slice(-8)}`;
       
-      // Skip saving to payments table which is causing RLS policy issues
-      // Just create a registration entry
-      const { error: registrationError } = await supabase
-        .from('registrations')
-        .insert({
-          event_id: event.id,
-          event_title: event.title,
-          name: name,
-          email: email,
-          phone: "N/A (paid registration)",
-          notes: `Paid registration via ${paymentMethod}. Transaction ID: ${transactionId}`
-        });
-      
-      if (registrationError) throw registrationError;
+      console.log("Mock payment processed:", {
+        event_id: event?.id,
+        event_title: event?.title,
+        name,
+        email,
+        amount: event?.price,
+        transaction_id: transactionId,
+        payment_method: paymentMethod
+      });
       
       // Navigate to success page
-      navigate("/event-payment-success", { 
-        state: { 
-          eventTitle: event.title,
-          amount: event.price,
-          currency: "USD",
-          name: name
-        } 
-      });
+      setTimeout(() => {
+        navigate("/event-payment-success", { 
+          state: { 
+            eventTitle: event?.title,
+            amount: event?.price,
+            currency: "USD",
+            name: name
+          } 
+        });
+      }, 1000);
     } catch (error) {
       console.error("Error processing payment:", error);
       toast.error("Failed to process payment. Please try again.");

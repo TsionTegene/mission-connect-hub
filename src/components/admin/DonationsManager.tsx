@@ -1,350 +1,417 @@
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, DollarSign, User, FileText, Search } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { toast } from "sonner";
+import { Calendar, Download, Search } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
+// Mock donation data
 type Donation = {
   id: string;
-  user_id: string | null;
+  donor_name: string;
+  donor_email: string;
   amount: number;
   currency: string;
+  category: string;
+  message: string | null;
+  created_at: string;
   payment_method: string;
   payment_status: string;
-  transaction_date: string;
-  is_anonymous: boolean;
-  notes: string | null;
+  receipt_sent: boolean;
 };
 
-type DonationStats = {
-  totalAmount: number;
-  averageAmount: number;
-  donationCount: number;
-  largestDonation: number;
-};
-
-type ChartData = {
-  name: string;
-  amount: number;
-};
-
-const timeRanges = [
-  { value: "7days", label: "Last 7 Days" },
-  { value: "30days", label: "Last 30 Days" },
-  { value: "90days", label: "Last 90 Days" },
-  { value: "1year", label: "Last Year" },
-  { value: "all", label: "All Time" },
+const mockDonations: Donation[] = [
+  {
+    id: "d1",
+    donor_name: "John Smith",
+    donor_email: "john@example.com",
+    amount: 100,
+    currency: "USD",
+    category: "General",
+    message: "Blessed to support the church's mission.",
+    created_at: "2025-03-15T14:25:32Z",
+    payment_method: "credit_card",
+    payment_status: "completed",
+    receipt_sent: true
+  },
+  {
+    id: "d2",
+    donor_name: "Jane Doe",
+    donor_email: "jane@example.com",
+    amount: 50,
+    currency: "USD",
+    category: "Building Fund",
+    message: null,
+    created_at: "2025-03-14T10:12:45Z",
+    payment_method: "paypal",
+    payment_status: "completed",
+    receipt_sent: true
+  },
+  {
+    id: "d3",
+    donor_name: "Michael Johnson",
+    donor_email: "michael@example.com",
+    amount: 200,
+    currency: "USD",
+    category: "Missions",
+    message: "For the Omo mission trip",
+    created_at: "2025-03-10T16:35:22Z",
+    payment_method: "credit_card",
+    payment_status: "completed",
+    receipt_sent: true
+  },
+  {
+    id: "d4",
+    donor_name: "Sarah Williams",
+    donor_email: "sarah@example.com",
+    amount: 75,
+    currency: "USD",
+    category: "Youth Ministry",
+    message: "To support the youth conference",
+    created_at: "2025-03-05T09:48:30Z",
+    payment_method: "credit_card",
+    payment_status: "completed",
+    receipt_sent: false
+  },
+  {
+    id: "d5",
+    donor_name: "David Brown",
+    donor_email: "david@example.com",
+    amount: 150,
+    currency: "USD",
+    category: "General",
+    message: null,
+    created_at: "2025-02-28T13:22:19Z",
+    payment_method: "bank_transfer",
+    payment_status: "completed",
+    receipt_sent: true
+  }
 ];
 
-const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
-};
+const CATEGORIES = ["All", "General", "Building Fund", "Missions", "Youth Ministry", "Outreach"];
+const DATE_RANGES = ["7days", "30days", "90days", "year", "all"];
 
 const DonationsManager = () => {
   const [donations, setDonations] = useState<Donation[]>([]);
-  const [filteredDonations, setFilteredDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [timeRange, setTimeRange] = useState("all");
-  const [stats, setStats] = useState<DonationStats>({
-    totalAmount: 0,
-    averageAmount: 0,
-    donationCount: 0,
-    largestDonation: 0,
-  });
-  const [chartData, setChartData] = useState<ChartData[]>([]);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [dateRange, setDateRange] = useState("30days");
+  const [analyticsData, setAnalyticsData] = useState<any[]>([]);
+  
   useEffect(() => {
     fetchDonations();
-  }, [timeRange]);
-
-  useEffect(() => {
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      const filtered = donations.filter(donation => 
-        donation.payment_method.toLowerCase().includes(query) ||
-        (donation.notes && donation.notes.toLowerCase().includes(query))
-      );
-      setFilteredDonations(filtered);
-    } else {
-      setFilteredDonations(donations);
-    }
-  }, [searchQuery, donations]);
-
+  }, [selectedCategory, dateRange]);
+  
   const fetchDonations = async () => {
     try {
       setLoading(true);
       
-      let query = supabase
-        .from('donations')
-        .select('*')
-        .order('transaction_date', { ascending: false });
-      
-      // Apply time filter if not "all"
-      if (timeRange !== "all") {
-        const now = new Date();
-        let startDate = new Date();
+      // Simulate API call with mock data
+      setTimeout(() => {
+        // Filter by category if needed
+        let filtered = [...mockDonations];
         
-        switch (timeRange) {
-          case "7days":
-            startDate.setDate(now.getDate() - 7);
-            break;
-          case "30days":
-            startDate.setDate(now.getDate() - 30);
-            break;
-          case "90days":
-            startDate.setDate(now.getDate() - 90);
-            break;
-          case "1year":
-            startDate.setFullYear(now.getFullYear() - 1);
-            break;
+        if (selectedCategory !== "All") {
+          filtered = filtered.filter(d => d.category === selectedCategory);
         }
         
-        query = query.gte('transaction_date', startDate.toISOString());
-      }
-      
-      const { data, error } = await query;
+        // Apply date filtering based on dateRange
+        const now = new Date();
+        let startDate: Date;
         
-      if (error) throw error;
-      
-      setDonations(data || []);
-      setFilteredDonations(data || []);
-      calculateStats(data || []);
-      prepareChartData(data || []);
+        switch (dateRange) {
+          case "7days":
+            startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            break;
+          case "30days":
+            startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+            break;
+          case "90days":
+            startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+            break;
+          case "year":
+            startDate = new Date(now.getFullYear(), 0, 1); // Jan 1 of current year
+            break;
+          default:
+            startDate = new Date(0); // Beginning of time
+        }
+        
+        if (dateRange !== "all") {
+          filtered = filtered.filter(d => new Date(d.created_at) >= startDate);
+        }
+        
+        setDonations(filtered);
+        generateAnalytics(filtered);
+        setLoading(false);
+      }, 500);
     } catch (error) {
       console.error("Error fetching donations:", error);
-      toast.error("Failed to load donation data");
-    } finally {
       setLoading(false);
     }
   };
-
-  const calculateStats = (data: Donation[]) => {
-    if (data.length === 0) {
-      setStats({
-        totalAmount: 0,
-        averageAmount: 0,
-        donationCount: 0,
-        largestDonation: 0,
-      });
-      return;
-    }
-    
-    const total = data.reduce((sum, donation) => sum + donation.amount, 0);
-    const largest = Math.max(...data.map(donation => donation.amount));
-    
-    setStats({
-      totalAmount: total,
-      averageAmount: total / data.length,
-      donationCount: data.length,
-      largestDonation: largest,
-    });
-  };
-
-  const prepareChartData = (data: Donation[]) => {
-    // Group by day/week/month depending on time range
-    const grouped: Record<string, number> = {};
+  
+  const generateAnalytics = (data: Donation[]) => {
+    // Group by category
+    const categories: Record<string, number> = {};
     
     data.forEach(donation => {
-      let dateKey;
-      const date = new Date(donation.transaction_date);
-      
-      if (timeRange === "7days") {
-        // Group by day for last 7 days
-        dateKey = date.toLocaleDateString();
-      } else if (timeRange === "30days") {
-        // Group by week for last 30 days
-        const weekNum = Math.floor(date.getDate() / 7) + 1;
-        dateKey = `Week ${weekNum}`;
-      } else {
-        // Group by month for longer periods
-        dateKey = date.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
-      }
-      
-      grouped[dateKey] = (grouped[dateKey] || 0) + donation.amount;
+      categories[donation.category] = (categories[donation.category] || 0) + donation.amount;
     });
     
-    // Convert grouped data to chart format
-    const chartItems = Object.entries(grouped).map(([name, amount]) => ({ name, amount }));
+    const chartData = Object.entries(categories).map(([category, amount]) => ({
+      name: category,
+      amount
+    }));
     
-    // Sort chronologically if date-based
-    if (timeRange === "7days") {
-      chartItems.sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime());
-    }
-    
-    setChartData(chartItems);
+    setAnalyticsData(chartData);
   };
-
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Filter donations based on search term
+    const filtered = mockDonations.filter(
+      d => 
+        d.donor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        d.donor_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (d.message && d.message.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    
+    setDonations(filtered);
+  };
+  
+  const resetSearch = () => {
+    setSearchTerm("");
+    fetchDonations();
+  };
+  
+  const getTotalAmount = () => {
+    return donations.reduce((total, donation) => total + donation.amount, 0);
+  };
+  
+  const handleSendReceipt = (donationId: string) => {
+    // Mark receipt as sent in our mock data
+    const updated = donations.map(d => 
+      d.id === donationId ? { ...d, receipt_sent: true } : d
+    );
+    
+    setDonations(updated);
+    console.log(`Mock: Sending receipt for donation ${donationId}`);
+    // In a real app, this would call an API to send the receipt
+  };
+  
+  const filteredDonations = searchTerm ? 
+    donations.filter(
+      d => 
+        d.donor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        d.donor_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (d.message && d.message.toLowerCase().includes(searchTerm.toLowerCase()))
+    ) : 
+    donations;
+  
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4 justify-between">
-        <h2 className="text-2xl font-semibold">Donations</h2>
+      <div className="flex flex-col md:flex-row items-start gap-4 justify-between">
+        <h2 className="text-2xl font-bold">Donations</h2>
         
-        <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-          <div className="relative w-full md:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search donations..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Time Range" />
+        <div className="flex flex-wrap gap-2">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
-              {timeRanges.map((range) => (
-                <SelectItem key={range.value} value={range.value}>
-                  {range.label}
-                </SelectItem>
+              {CATEGORIES.map(category => (
+                <SelectItem key={category} value={category}>{category}</SelectItem>
               ))}
             </SelectContent>
           </Select>
+          
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Time Period" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7days">Last 7 Days</SelectItem>
+              <SelectItem value="30days">Last 30 Days</SelectItem>
+              <SelectItem value="90days">Last 90 Days</SelectItem>
+              <SelectItem value="year">This Year</SelectItem>
+              <SelectItem value="all">All Time</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+          </Button>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="glass">
-          <CardContent className="py-4">
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">Total Donations</p>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Donations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${getTotalAmount().toFixed(2)} USD
             </div>
-            <p className="text-2xl font-bold mt-2">
-              {loading ? "..." : formatCurrency(stats.totalAmount)}
-            </p>
           </CardContent>
         </Card>
         
         <Card className="glass">
-          <CardContent className="py-4">
-            <div className="flex items-center space-x-2">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">Donation Count</p>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Donations Count</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {donations.length}
             </div>
-            <p className="text-2xl font-bold mt-2">
-              {loading ? "..." : stats.donationCount}
-            </p>
           </CardContent>
         </Card>
         
         <Card className="glass">
-          <CardContent className="py-4">
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">Average Donation</p>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Average Amount</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              ${donations.length > 0 ? (getTotalAmount() / donations.length).toFixed(2) : "0.00"} USD
             </div>
-            <p className="text-2xl font-bold mt-2">
-              {loading ? "..." : formatCurrency(stats.averageAmount)}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="glass">
-          <CardContent className="py-4">
-            <div className="flex items-center space-x-2">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <p className="text-sm font-medium">Largest Donation</p>
-            </div>
-            <p className="text-2xl font-bold mt-2">
-              {loading ? "..." : formatCurrency(stats.largestDonation)}
-            </p>
           </CardContent>
         </Card>
       </div>
       
       <Card className="glass">
-        <CardContent className="p-6">
-          <h3 className="text-lg font-medium mb-4">Donation Trends</h3>
+        <CardHeader>
+          <CardTitle>Donation Analytics</CardTitle>
+          <CardDescription>
+            Donation amounts by category
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis tickFormatter={(value) => `$${value}`} />
-                <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
-                <Bar dataKey="amount" fill="#8884d8" name="Donations" />
-              </BarChart>
-            </ResponsiveContainer>
+            {loading ? (
+              <div className="h-full flex items-center justify-center">
+                <p>Loading analytics...</p>
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analyticsData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+                  <Legend />
+                  <Bar dataKey="amount" name="Amount (USD)" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </CardContent>
       </Card>
       
-      <h3 className="text-lg font-medium mt-6">Donation Records</h3>
-      
-      {loading ? (
-        <div className="flex justify-center py-8">
-          <p>Loading donations...</p>
+      <div className="bg-card border rounded-lg p-6">
+        <div className="flex flex-col md:flex-row items-start justify-between mb-6 gap-4">
+          <h3 className="text-lg font-medium">Donation Records</h3>
+          
+          <form onSubmit={handleSearch} className="flex w-full md:w-auto gap-2">
+            <div className="relative flex-grow md:w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search donations..."
+                className="pl-9"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Button type="submit" variant="secondary">Search</Button>
+            {searchTerm && (
+              <Button type="button" variant="ghost" onClick={resetSearch}>Clear</Button>
+            )}
+          </form>
         </div>
-      ) : filteredDonations.length === 0 ? (
-        <div className="border rounded-lg p-8 text-center">
-          <p>No donations found for the selected time period.</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredDonations.map((donation) => (
-            <Card key={donation.id} className="glass">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-                  <div className="space-y-3 flex-1">
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xl font-bold">
-                          {formatCurrency(donation.amount)}
-                        </h3>
-                        
-                        <Badge variant="outline">
-                          {donation.payment_method}
-                        </Badge>
-                        
-                        {donation.is_anonymous && (
-                          <Badge variant="secondary">
-                            Anonymous
-                          </Badge>
-                        )}
+        
+        {loading ? (
+          <div className="text-center py-12">
+            <p>Loading donations...</p>
+          </div>
+        ) : filteredDonations.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No donations found</p>
+          </div>
+        ) : (
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Donor</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredDonations.map((donation) => (
+                  <TableRow key={donation.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium">{donation.donor_name}</p>
+                        <p className="text-sm text-muted-foreground">{donation.donor_email}</p>
                       </div>
-                      
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      ${donation.amount.toFixed(2)} {donation.currency}
+                    </TableCell>
+                    <TableCell>{donation.category}</TableCell>
+                    <TableCell>
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
-                          {new Date(donation.transaction_date).toLocaleString()}
-                        </span>
+                        {new Date(donation.created_at).toLocaleDateString()}
                       </div>
-                    </div>
-                    
-                    <Badge
-                      variant={donation.payment_status === "succeeded" ? "default" : "outline"}
-                    >
-                      {donation.payment_status}
-                    </Badge>
-                    
-                    {donation.notes && (
-                      <div className="pt-2">
-                        <div className="flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
-                          <span className="font-medium">Notes:</span>
-                        </div>
-                        <p className="mt-1 pl-6 text-foreground/80 text-sm">{donation.notes}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {donation.payment_status}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => handleSendReceipt(donation.id)}
+                        disabled={donation.receipt_sent}
+                      >
+                        {donation.receipt_sent ? "Receipt Sent" : "Send Receipt"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

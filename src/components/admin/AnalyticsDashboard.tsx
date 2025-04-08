@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
@@ -14,6 +13,61 @@ type AnalyticsEvent = {
 };
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#8DD1E1'];
+
+// Mock analytics data
+const generateMockData = (timeRange: string): AnalyticsEvent[] => {
+  const now = new Date();
+  const events: AnalyticsEvent[] = [];
+  
+  // Generate number of events based on time range
+  let numEvents = 20;
+  switch (timeRange) {
+    case "24h":
+      numEvents = 15;
+      break;
+    case "7days":
+      numEvents = 30;
+      break;
+    case "30days":
+      numEvents = 60;
+      break;
+    case "90days":
+      numEvents = 120;
+      break;
+  }
+  
+  // Pages to generate views for
+  const pages = ['/', '/about', '/events', '/donate', '/auth', '/profile'];
+  const eventTypes = ['page_view', 'button_click', 'form_submit', 'video_play', 'donation'];
+  
+  // Generate events
+  for (let i = 0; i < numEvents; i++) {
+    // Random date within the range
+    const daysAgo = timeRange === "24h" ? Math.random() 
+                 : timeRange === "7days" ? Math.random() * 7 
+                 : timeRange === "30days" ? Math.random() * 30 
+                 : Math.random() * 90;
+    
+    const date = new Date(now.getTime() - (daysAgo * 24 * 60 * 60 * 1000));
+    
+    // Random event type and page
+    const eventType = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+    const page = pages[Math.floor(Math.random() * pages.length)];
+    
+    events.push({
+      id: `mock-${i}-${Date.now()}`,
+      event_type: eventType,
+      page_path: page,
+      created_at: date.toISOString(),
+      event_data: {
+        viewport: { width: 1920, height: 1080 },
+        userAgent: 'Mozilla/5.0'
+      }
+    });
+  }
+  
+  return events;
+};
 
 const AnalyticsDashboard = () => {
   const [pageViews, setPageViews] = useState<Record<string, number>>({});
@@ -29,34 +83,9 @@ const AnalyticsDashboard = () => {
     try {
       setLoading(true);
       
-      // Calculate date range based on selection
-      const now = new Date();
-      let startDate = new Date();
-      
-      switch (timeRange) {
-        case "24h":
-          startDate.setHours(now.getHours() - 24);
-          break;
-        case "7days":
-          startDate.setDate(now.getDate() - 7);
-          break;
-        case "30days":
-          startDate.setDate(now.getDate() - 30);
-          break;
-        case "90days":
-          startDate.setDate(now.getDate() - 90);
-          break;
-      }
-      
-      const { data, error } = await supabase
-        .from('analytics_events')
-        .select('*')
-        .gte('created_at', startDate.toISOString())
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
-      
-      processAnalyticsData(data || []);
+      // Use mock data instead of Supabase
+      const mockEvents = generateMockData(timeRange);
+      processAnalyticsData(mockEvents);
     } catch (error) {
       console.error("Error fetching analytics data:", error);
     } finally {

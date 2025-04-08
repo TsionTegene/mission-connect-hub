@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -54,6 +53,47 @@ const SECTIONS = {
   ],
 };
 
+// Mock content blocks
+const MOCK_CONTENT_BLOCKS: Record<string, Record<string, ContentBlock>> = {
+  home: {
+    hero: {
+      id: "1",
+      page_id: "home",
+      section_id: "hero",
+      title: "Welcome to Mulu Wongel Church",
+      content: "A place of worship, community, and spiritual growth. Join us for our weekly services and special events.",
+      image_url: "https://images.unsplash.com/photo-1438032005730-c779502df39b",
+      order_index: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    mission: {
+      id: "2",
+      page_id: "home",
+      section_id: "mission",
+      title: "Our Mission",
+      content: "To spread the love of Christ through service, worship, and community outreach.",
+      image_url: null,
+      order_index: 1,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+  },
+  about: {
+    history: {
+      id: "3",
+      page_id: "about",
+      section_id: "history",
+      title: "Our History",
+      content: "Founded in 1995, our church has grown from a small gathering to a vibrant community.",
+      image_url: "https://images.unsplash.com/photo-1529070538774-1843cb3265df",
+      order_index: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }
+  }
+};
+
 const ContentManager = () => {
   const [selectedPage, setSelectedPage] = useState<string>("home");
   const [selectedSection, setSelectedSection] = useState<string>("");
@@ -85,17 +125,13 @@ const ContentManager = () => {
     try {
       setLoading(true);
       
-      const { data, error } = await supabase
-        .from("content_blocks")
-        .select("*")
-        .eq("page_id", selectedPage)
-        .eq("section_id", selectedSection);
-        
-      if (error) throw error;
+      // Check for mock content
+      const pageContent = MOCK_CONTENT_BLOCKS[selectedPage];
+      const sectionContent = pageContent?.[selectedSection];
       
-      if (data && data.length > 0) {
-        setContentBlocks(data);
-        setCurrentBlock(data[0]);
+      if (sectionContent) {
+        setContentBlocks([sectionContent]);
+        setCurrentBlock(sectionContent);
       } else {
         // No existing block, create a new one
         setContentBlocks([]);
@@ -137,20 +173,29 @@ const ContentManager = () => {
         page_id: selectedPage,
         section_id: selectedSection,
         updated_at: new Date().toISOString(),
+        id: currentBlock.id || `mock-${Date.now()}`,
+        created_at: currentBlock.created_at || new Date().toISOString()
       };
       
-      const { error } = await supabase
-        .from("content_blocks")
-        .upsert(blockData);
-        
-      if (error) throw error;
+      console.log("Mock saving content block:", blockData);
       
-      toast.success("Content block saved successfully");
-      fetchContentBlock();
+      // Update the mock data
+      if (!MOCK_CONTENT_BLOCKS[selectedPage]) {
+        MOCK_CONTENT_BLOCKS[selectedPage] = {};
+      }
+      
+      MOCK_CONTENT_BLOCKS[selectedPage][selectedSection] = blockData as ContentBlock;
+      
+      // Simulate API delay
+      setTimeout(() => {
+        toast.success("Content block saved successfully");
+        setCurrentBlock(blockData);
+        setContentBlocks([blockData as ContentBlock]);
+        setSaving(false);
+      }, 800);
     } catch (error) {
       console.error("Error saving content block:", error);
       toast.error("Failed to save content block");
-    } finally {
       setSaving(false);
     }
   };

@@ -1,5 +1,5 @@
 
-import { useState, createContext, useContext, ReactNode } from "react";
+import { useState, createContext, useContext, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 type User = {
@@ -30,11 +30,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
-  // In a real implementation, you would check for an existing session here
-  // and set up auth state listeners
+  useEffect(() => {
+    // Check for user in localStorage (mock auth persistence)
+    const checkForUser = () => {
+      const savedUser = localStorage.getItem('mockUser');
+      if (savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          setSession({ user: parsedUser });
+          
+          // Set admin status based on email containing "admin"
+          setIsAdmin(parsedUser.email.includes("admin"));
+        } catch (e) {
+          console.error("Error parsing saved user:", e);
+          localStorage.removeItem('mockUser');
+        }
+      }
+      setLoading(false);
+    };
+    
+    checkForUser();
+  }, []);
 
   const signOut = async () => {
     // Clear user session
+    localStorage.removeItem('mockUser');
     setSession(null);
     setUser(null);
     setIsAdmin(false);

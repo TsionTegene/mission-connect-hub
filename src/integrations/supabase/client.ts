@@ -1,10 +1,10 @@
 
-// This file now provides mock functionality instead of a Supabase client
-// You can replace this with your own backend API client
+// This file provides mock functionality instead of a Supabase client
+// You can replace this with your own backend API client implementation
 
-// Create a simple mock client object that can be imported but doesn't do anything
+// Create a mock client object that mimics the Supabase client API structure
 export const supabase = {
-  // Mock methods that would be called in components
+  // Mock auth methods
   auth: {
     signInWithPassword: async () => ({ data: null, error: null }),
     signUp: async () => ({ data: null, error: null }),
@@ -14,26 +14,67 @@ export const supabase = {
       data: { subscription: { unsubscribe: () => {} } }
     })
   },
-  from: () => ({
-    select: () => ({
-      eq: () => ({
+  
+  // Mock database methods
+  from: (table: string) => ({
+    select: (columns?: string) => ({
+      eq: (column: string, value: any) => ({
         single: async () => ({ data: null, error: null }),
-        order: () => ({
+        order: (column: string, options?: { ascending?: boolean }) => ({
           data: [],
           error: null
-        })
+        }),
+        data: null,
+        error: null
       }),
-      order: () => ({
+      gte: (column: string, value: any) => ({
+        order: (column: string, options?: { ascending?: boolean }) => ({
+          data: [],
+          error: null
+        }),
         data: [],
         error: null
-      })
+      }),
+      order: (column: string, options?: { ascending?: boolean }) => ({
+        data: [],
+        error: null
+      }),
+      count: (options?: { exact?: boolean, head?: boolean }) => ({
+        eq: (column: string, value: any) => ({
+          data: 0,
+          count: 0,
+          error: null
+        }),
+        data: 0,
+        count: 0,
+        error: null
+      }),
+      data: [],
+      error: null
     }),
-    insert: async () => ({ error: null }),
-    update: async () => ({ error: null }),
-    upsert: async () => ({ error: null }),
-    delete: async () => ({ error: null })
+    insert: async (data: any) => ({ data: null, error: null }),
+    update: async (data: any) => ({ data: null, error: null }),
+    upsert: async (data: any) => ({ data: null, error: null }),
+    delete: () => ({
+      eq: (column: string, value: any) => ({
+        data: null,
+        error: null
+      }),
+      data: null,
+      error: null
+    })
   }),
+  
+  // Mock storage methods
+  storage: {
+    from: (bucket: string) => ({
+      upload: async (path: string, file: any) => ({ data: null, error: null }),
+      getPublicUrl: (path: string) => ({ data: { publicUrl: '' } })
+    })
+  },
+  
+  // Mock functions
   functions: {
-    invoke: async () => ({ data: null, error: null })
+    invoke: async (name: string, options?: any) => ({ data: null, error: null })
   }
 };

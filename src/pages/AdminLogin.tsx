@@ -1,7 +1,5 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { v4 as uuidv4 } from 'uuid';
 
 const AdminLogin = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -22,10 +21,17 @@ const AdminLogin = () => {
   // Check if user is already logged in
   useEffect(() => {
     const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session && data.session.user?.email?.includes("admin")) {
-        // Already logged in as admin, redirect to dashboard
-        navigate("/admin/dashboard");
+      const savedUser = localStorage.getItem('mockUser');
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          if (user.email?.includes("admin")) {
+            // Already logged in as admin, redirect to dashboard
+            navigate("/admin/dashboard");
+          }
+        } catch (e) {
+          console.error("Error parsing saved user:", e);
+        }
       }
     };
     
@@ -44,26 +50,33 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error("Login failed: " + error.message);
+      // Simple validation
+      if (!email || !password) {
+        toast.error("Email and password are required");
+        setLoading(false);
         return;
       }
 
-      // Check if the user is an admin (email contains 'admin')
-      if (data.user && data.user.email?.includes("admin")) {
-        // Successfully logged in as admin
-        toast.success("Logged in successfully");
-        navigate("/admin/dashboard");
-      } else {
-        // Not an admin
-        await supabase.auth.signOut();
+      // Check if the email contains 'admin' for mock admin privileges
+      if (!email.includes("admin")) {
         toast.error("You do not have admin privileges");
+        setLoading(false);
+        return;
       }
+
+      // Mock successful login
+      const mockUser = {
+        id: uuidv4(),
+        email: email,
+        full_name: email.split('@')[0]
+      };
+      
+      // Store in localStorage for persistence
+      localStorage.setItem('mockUser', JSON.stringify(mockUser));
+      
+      // Successfully logged in as admin
+      toast.success("Logged in successfully");
+      navigate("/admin/dashboard");
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("An unexpected error occurred");
@@ -84,17 +97,14 @@ const AdminLogin = () => {
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error("Signup failed: " + error.message);
+      if (!email || !password || !username) {
+        toast.error("All fields are required");
+        setLoading(false);
         return;
       }
 
-      toast.success("Admin account created successfully. Please check your email for verification.");
+      // Mock successful signup
+      toast.success("Admin account created successfully. You can now log in.");
       setActiveTab("login");
     } catch (error) {
       console.error("Unexpected error during signup:", error);

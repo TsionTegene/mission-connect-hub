@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Calendar, MapPin, Clock, Calendar as CalendarIcon, X, Edit, Trash2, DollarSign, Mail } from "lucide-react";
+import { Calendar, MapPin, Clock, X, Edit, Trash2, DollarSign, Mail } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Database } from "@/integrations/supabase/types";
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -27,10 +25,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { mockEvents } from "@/mocks/eventData";
+import { v4 as uuidv4 } from 'uuid';
 
-type Event = Database["public"]["Tables"]["events"]["Row"];
-type EventInsert = Database["public"]["Tables"]["events"]["Insert"];
+// Event type definition
+export type Event = {
+  id: string;
+  title: string;
+  date: string;
+  time?: string;
+  location: string;
+  description?: string;
+  image?: string;
+  created_at: string;
+  is_paid: boolean;
+  price: number | null;
+};
 
+// Mock registration type
+interface Registration {
+  id: string;
+  event_id: string;
+  event_title: string;
+  name: string;
+  email: string;
+  phone: string;
+  notes: string | null;
+  created_at: string;
+}
+
+// Mock payment type
 interface Payment {
   id: string;
   event_id: string;
@@ -43,21 +67,77 @@ interface Payment {
   created_at: string;
 }
 
-interface Registration {
-  id: string;
-  event_id: string;
-  event_title: string;
-  name: string;
-  email: string;
-  phone: string;
-  notes: string | null;
-  created_at: string;
-}
+// Mock data for registrations
+const mockRegistrations: { [eventId: string]: Registration[] } = {
+  "2": [
+    {
+      id: "reg1",
+      event_id: "2",
+      event_title: "Mission Trip to Omo",
+      name: "John Smith",
+      email: "john@example.com",
+      phone: "555-123-4567",
+      notes: "Looking forward to the trip!",
+      created_at: new Date().toISOString()
+    },
+    {
+      id: "reg2",
+      event_id: "2",
+      event_title: "Mission Trip to Omo",
+      name: "Jane Doe",
+      email: "jane@example.com", 
+      phone: "555-987-6543",
+      notes: null,
+      created_at: new Date().toISOString()
+    }
+  ],
+  "3": [
+    {
+      id: "reg3",
+      event_id: "3",
+      event_title: "Worship Night",
+      name: "Michael Johnson",
+      email: "michael@example.com",
+      phone: "555-555-5555",
+      notes: "Can I volunteer to help?",
+      created_at: new Date().toISOString()
+    }
+  ]
+};
+
+// Mock data for payments
+const mockPayments: { [eventId: string]: Payment[] } = {
+  "2": [
+    {
+      id: "pay1",
+      event_id: "2",
+      user_email: "john@example.com",
+      amount: 250,
+      currency: "USD",
+      payment_status: "completed",
+      payment_method: "credit_card",
+      transaction_id: "tx_123456",
+      created_at: new Date().toISOString()
+    },
+    {
+      id: "pay2",
+      event_id: "2",
+      user_email: "jane@example.com",
+      amount: 250,
+      currency: "USD",
+      payment_status: "completed",
+      payment_method: "paypal",
+      transaction_id: "tx_789012",
+      created_at: new Date().toISOString()
+    }
+  ]
+};
 
 const EventManager = () => {
+  // Use a copy of the mock events to allow changes
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState<EventInsert>({
+  const [formData, setFormData] = useState<Partial<Event>>({
     title: "",
     date: "",
     time: "",
@@ -90,15 +170,8 @@ const EventManager = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('date', { ascending: true });
-        
-      if (error) throw error;
-      
-      setEvents(data || []);
+      // Use our mock events data
+      setEvents([...mockEvents]);
     } catch (error) {
       console.error("Error fetching events:", error);
       toast.error("Failed to load events");
@@ -109,25 +182,13 @@ const EventManager = () => {
 
   const fetchEventStats = async (eventId: string) => {
     try {
-      // Fetch registrations
-      const { data: registrationsData, error: registrationsError } = await supabase
-        .from('registrations')
-        .select('*')
-        .eq('event_id', eventId);
-        
-      if (registrationsError) throw registrationsError;
+      // Get mock registrations for this event
+      const eventRegistrations = mockRegistrations[eventId] || [];
+      setRegistrations(eventRegistrations);
       
-      setRegistrations(registrationsData || []);
-      
-      // Fetch payments directly from Supabase
-      const { data: paymentsData, error: paymentsError } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('event_id', eventId);
-      
-      if (paymentsError) throw paymentsError;
-      
-      setPayments(paymentsData || []);
+      // Get mock payments for this event
+      const eventPayments = mockPayments[eventId] || [];
+      setPayments(eventPayments);
     } catch (error) {
       console.error("Error fetching event stats:", error);
       toast.error("Failed to load event statistics");
@@ -169,46 +230,50 @@ const EventManager = () => {
     setSaving(true);
     
     try {
-      let result;
-      
-      if (editing) {
-        // Update existing event
-        result = await supabase
-          .from('events')
-          .update(formData)
-          .eq('id', editing)
-          .select();
+      setTimeout(() => {
+        if (editing) {
+          // Update existing event
+          const updatedEvents = events.map(event => 
+            event.id === editing ? { ...event, ...formData } : event
+          );
+          setEvents(updatedEvents);
+          toast.success("Event updated successfully");
+        } else {
+          // Create new event
+          const newEvent: Event = {
+            id: uuidv4(),
+            title: formData.title!,
+            date: formData.date!,
+            time: formData.time || undefined,
+            location: formData.location!,
+            description: formData.description || undefined,
+            image: formData.image || undefined,
+            created_at: new Date().toISOString(),
+            is_paid: formData.is_paid || false,
+            price: formData.price
+          };
           
-        toast.success("Event updated successfully");
-      } else {
-        // Create new event
-        result = await supabase
-          .from('events')
-          .insert(formData)
-          .select();
-          
-        toast.success("Event created successfully");
-      }
-      
-      if (result.error) throw result.error;
-      
-      // Reset form and refresh events
-      setFormData({
-        title: "",
-        date: "",
-        time: "",
-        location: "",
-        description: "",
-        image: "",
-        is_paid: false,
-        price: null,
-      });
-      setEditing(null);
-      fetchEvents();
+          setEvents(prev => [...prev, newEvent]);
+          toast.success("Event created successfully");
+        }
+        
+        // Reset form
+        setFormData({
+          title: "",
+          date: "",
+          time: "",
+          location: "",
+          description: "",
+          image: "",
+          is_paid: false,
+          price: null,
+        });
+        setEditing(null);
+        setSaving(false);
+      }, 800);
     } catch (error) {
       console.error("Error saving event:", error);
       toast.error(editing ? "Failed to update event" : "Failed to create event");
-    } finally {
       setSaving(false);
     }
   };
@@ -230,38 +295,21 @@ const EventManager = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      // First check for registrations and payments
-      const { count: registrationsCount, error: countError } = await supabase
-        .from('registrations')
-        .select('*', { count: 'exact', head: true })
-        .eq('event_id', id);
-        
-      if (countError) throw countError;
+      // Check for registrations
+      const registrationsCount = (mockRegistrations[id] || []).length;
       
       // If registrations exist, warn admin
-      if (registrationsCount && registrationsCount > 0) {
+      if (registrationsCount > 0) {
         if (!confirm(`This event has ${registrationsCount} registrations. Are you sure you want to delete it? This will also delete all registrations.`)) {
           return;
         }
         
-        // Delete registrations first
-        const { error: regDeleteError } = await supabase
-          .from('registrations')
-          .delete()
-          .eq('event_id', id);
-          
-        if (regDeleteError) throw regDeleteError;
+        // Remove registrations in mock data
+        delete mockRegistrations[id];
       }
       
       // Check for payments 
-      const { data: paymentsData, error: paymentsError } = await supabase
-        .from('payments')
-        .select('*')
-        .eq('event_id', id);
-      
-      if (paymentsError) throw paymentsError;
-      
-      const paymentsCount = paymentsData?.length || 0;
+      const paymentsCount = (mockPayments[id] || []).length;
       
       // If payments exist, warn admin
       if (paymentsCount > 0) {
@@ -269,27 +317,13 @@ const EventManager = () => {
           return;
         }
         
-        // Delete payments
-        const { error: paymentDeleteError } = await supabase
-          .from('payments')
-          .delete()
-          .eq('event_id', id);
-          
-        if (paymentDeleteError) throw paymentDeleteError;
+        // Remove payments in mock data
+        delete mockPayments[id];
       }
       
-      // Finally delete the event
-      const { error } = await supabase
-        .from('events')
-        .delete()
-        .eq('id', id);
-        
-      if (error) throw error;
-      
-      toast.success("Event deleted successfully");
-      
-      // Remove from local state
+      // Delete the event
       setEvents(prev => prev.filter(event => event.id !== id));
+      toast.success("Event deleted successfully");
       
       if (viewingEventStats === id) {
         setViewingEventStats(null);
@@ -333,16 +367,25 @@ const EventManager = () => {
 
   const handleDeleteRegistration = async (registrationId: string) => {
     try {
-      const { error } = await supabase
-        .from('registrations')
-        .delete()
-        .eq('id', registrationId);
-        
-      if (error) throw error;
+      // Find the registration and its event
+      let eventId: string | null = null;
       
-      // Remove from local state
-      setRegistrations(prev => prev.filter(reg => reg.id !== registrationId));
-      toast.success("Registration deleted successfully");
+      Object.entries(mockRegistrations).forEach(([key, regs]) => {
+        if (regs.some(reg => reg.id === registrationId)) {
+          eventId = key;
+        }
+      });
+      
+      if (eventId) {
+        // Update mock registrations
+        mockRegistrations[eventId] = mockRegistrations[eventId].filter(
+          reg => reg.id !== registrationId
+        );
+        
+        // Update current registrations state
+        setRegistrations(prev => prev.filter(reg => reg.id !== registrationId));
+        toast.success("Registration deleted successfully");
+      }
     } catch (error) {
       console.error("Error deleting registration:", error);
       toast.error("Failed to delete registration");
@@ -626,7 +669,7 @@ const EventManager = () => {
                                       </Button>
                                       <Button 
                                         variant="ghost" 
-                                        size="sm"
+                                        size="sm" 
                                         className="text-destructive"
                                         onClick={() => confirmDeleteRegistration(reg.id)}
                                       >
@@ -642,43 +685,35 @@ const EventManager = () => {
                       )}
                     </div>
                     
-                    {event.is_paid && (
-                      <div>
-                        <h5 className="font-medium mb-2">Payments ({payments.length})</h5>
-                        {payments.length === 0 ? (
-                          <p className="text-sm text-muted-foreground">No payments yet.</p>
-                        ) : (
-                          <div className="max-h-60 overflow-y-auto">
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Email</TableHead>
-                                  <TableHead>Amount</TableHead>
-                                  <TableHead>Status</TableHead>
+                    <div>
+                      <h5 className="font-medium mb-2">Payments ({payments.length})</h5>
+                      {payments.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">No payments yet.</p>
+                      ) : (
+                        <div className="max-h-60 overflow-y-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Amount</TableHead>
+                                <TableHead>Method</TableHead>
+                                <TableHead>Status</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {payments.map((payment) => (
+                                <TableRow key={payment.id}>
+                                  <TableCell>{payment.user_email}</TableCell>
+                                  <TableCell>${payment.amount} {payment.currency}</TableCell>
+                                  <TableCell>{payment.payment_method}</TableCell>
+                                  <TableCell>{payment.payment_status}</TableCell>
                                 </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {payments.map((payment) => (
-                                  <TableRow key={payment.id}>
-                                    <TableCell>{payment.user_email}</TableCell>
-                                    <TableCell>${payment.amount}</TableCell>
-                                    <TableCell>
-                                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                        {payment.payment_status}
-                                      </span>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                            
-                            <div className="mt-4 p-3 bg-muted rounded">
-                              <p className="text-sm font-medium">Total Revenue: ${payments.reduce((sum, payment) => sum + (payment.amount || 0), 0).toFixed(2)}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
@@ -687,37 +722,43 @@ const EventManager = () => {
         </div>
       )}
       
-      {/* Delete event confirmation dialog */}
+      {/* Delete Event Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              event and all associated registrations and payments.
+              This action cannot be undone. This will permanently delete the event
+              and all associated registrations and payments.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteEventId(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteEventId && handleDelete(deleteEventId)} className="bg-destructive text-destructive-foreground">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteEventId && handleDelete(deleteEventId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
       
-      {/* Delete registration confirmation dialog */}
+      {/* Delete Registration Dialog */}
       <AlertDialog open={deleteRegistrationDialogOpen} onOpenChange={setDeleteRegistrationDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Registration</AlertDialogTitle>
+            <AlertDialogTitle>Delete registration?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this registration? This action cannot be undone.
+              Are you sure you want to delete this registration?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteRegistrationId(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteRegistrationId && handleDeleteRegistration(deleteRegistrationId)} className="bg-destructive text-destructive-foreground">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteRegistrationId && handleDeleteRegistration(deleteRegistrationId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
