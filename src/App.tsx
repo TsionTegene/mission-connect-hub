@@ -22,15 +22,8 @@ import EventPaymentSuccess from "./pages/EventPaymentSuccess";
 // Import styles
 import "./styles/accessibility.css";
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-      retry: false,
-    },
-  },
-});
+// Create a client - simplified for Node.js compatibility
+const queryClient = new QueryClient();
 
 // Analytics tracking component
 const AnalyticsTracker = () => {

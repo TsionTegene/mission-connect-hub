@@ -1,6 +1,5 @@
 
 import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '@/integrations/supabase/client';
 
 // Create or get a session ID
 const getSessionId = () => {
@@ -17,8 +16,8 @@ export const trackPageView = (pagePath: string) => {
   try {
     const sessionId = getSessionId();
     
-    // Log event to Supabase (mock operation)
-    console.log("MOCK: Tracking page view:", {
+    // Log event to console (mock operation)
+    console.log("Tracking page view:", {
       session_id: sessionId,
       event_type: 'page_view',
       page_path: pagePath,
@@ -32,20 +31,25 @@ export const trackPageView = (pagePath: string) => {
       user_agent: navigator.userAgent
     });
     
-    // Using our mock client
-    supabase.from('analytics_events').insert({
-      session_id: sessionId,
-      event_type: 'page_view',
-      page_path: pagePath,
-      event_data: {
-        referrer: document.referrer,
-        viewport: {
-          width: window.innerWidth,
-          height: window.innerHeight
-        }
-      },
-      user_agent: navigator.userAgent
-    });
+    // In a real implementation, you would send this data to your Node.js backend
+    // Example:
+    // fetch('/api/analytics/track', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     session_id: sessionId,
+    //     event_type: 'page_view',
+    //     page_path: pagePath,
+    //     event_data: {
+    //       referrer: document.referrer,
+    //       viewport: {
+    //         width: window.innerWidth,
+    //         height: window.innerHeight
+    //       }
+    //     },
+    //     user_agent: navigator.userAgent
+    //   })
+    // });
   } catch (error) {
     console.error("Error tracking page view:", error);
   }
@@ -57,7 +61,7 @@ export const trackEvent = (eventType: string, eventData: any = {}) => {
     const sessionId = getSessionId();
     
     // Log event to console (mock operation)
-    console.log("MOCK: Tracking event:", {
+    console.log("Tracking event:", {
       session_id: sessionId,
       event_type: eventType,
       page_path: window.location.pathname,
@@ -65,14 +69,19 @@ export const trackEvent = (eventType: string, eventData: any = {}) => {
       user_agent: navigator.userAgent
     });
     
-    // Using our mock client
-    supabase.from('analytics_events').insert({
-      session_id: sessionId,
-      event_type: eventType,
-      page_path: window.location.pathname,
-      event_data: eventData,
-      user_agent: navigator.userAgent
-    });
+    // In a real implementation, you would send this data to your Node.js backend
+    // Example:
+    // fetch('/api/analytics/track', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     session_id: sessionId,
+    //     event_type: eventType,
+    //     page_path: window.location.pathname,
+    //     event_data: eventData,
+    //     user_agent: navigator.userAgent
+    //   })
+    // });
   } catch (error) {
     console.error("Error tracking event:", error);
   }
