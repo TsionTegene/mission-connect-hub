@@ -1,7 +1,4 @@
 
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-
 export type Registration = {
   id: string;
   event_id: string;
@@ -13,45 +10,40 @@ export type Registration = {
   created_at: string;
 };
 
-export const fetchRegistrations = async (): Promise<Registration[]> => {
-  try {
-    const { data, error } = await supabase
-      .from('registrations')
-      .select('*')
-      .order('created_at', { ascending: false });
-      
-    if (error) {
-      console.error("Error fetching registrations:", error);
-      throw error;
-    }
-    
-    return data || [];
-  } catch (error) {
-    console.error("Error fetching registrations:", error);
-    toast.error("Failed to load registrations");
-    return [];
+// Mock data for frontend development
+const mockRegistrations: Registration[] = [
+  {
+    id: "1",
+    event_id: "event-1",
+    event_title: "Sunday Service",
+    name: "John Doe",
+    email: "john@example.com",
+    phone: "123-456-7890",
+    notes: "Looking forward to attending",
+    created_at: new Date().toISOString()
+  },
+  {
+    id: "2",
+    event_id: "event-2",
+    event_title: "Youth Conference",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    phone: "987-654-3210",
+    notes: null,
+    created_at: new Date().toISOString()
   }
+];
+
+export const fetchRegistrations = async (): Promise<Registration[]> => {
+  // This is now a mock function that returns sample data
+  // Replace with your own backend API call when ready
+  console.log("Fetching registrations (mock)");
+  return Promise.resolve([...mockRegistrations]);
 };
 
 export const deleteRegistration = async (id: string): Promise<boolean> => {
-  try {
-    console.log("Deleting registration with ID:", id);
-    
-    const { error } = await supabase
-      .from('registrations')
-      .delete()
-      .eq('id', id);
-      
-    if (error) {
-      console.error("Supabase deletion error:", error);
-      throw error;
-    }
-    
-    toast.success("Registration deleted successfully");
-    return true;
-  } catch (error) {
-    console.error("Error deleting registration:", error);
-    toast.error("Failed to delete registration");
-    return false;
-  }
+  // This is now a mock function that simulates deletion
+  // Replace with your own backend API call when ready
+  console.log("Deleting registration with ID (mock):", id);
+  return Promise.resolve(true);
 };

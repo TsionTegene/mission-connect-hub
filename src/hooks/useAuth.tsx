@@ -1,11 +1,14 @@
 
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, createContext, useContext, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
+type User = {
+  id: string;
+  email: string;
+};
+
 type AuthContextType = {
-  session: Session | null;
+  session: any | null;
   user: User | null;
   signOut: () => Promise<void>;
   loading: boolean;
@@ -21,48 +24,20 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<any | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
-        console.log("Auth state change:", event, currentSession?.user?.email);
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        
-        // Check if user is admin (based on email containing 'admin')
-        const userIsAdmin = currentSession?.user?.email?.includes("admin") ?? false;
-        setIsAdmin(userIsAdmin);
-        
-        setLoading(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      console.log("Initial session check:", currentSession?.user?.email);
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      
-      // Check if user is admin (based on email containing 'admin')
-      const userIsAdmin = currentSession?.user?.email?.includes("admin") ?? false;
-      setIsAdmin(userIsAdmin);
-      
-      setLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  // In a real implementation, you would check for an existing session here
+  // and set up auth state listeners
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    // Clear user session
+    setSession(null);
+    setUser(null);
+    setIsAdmin(false);
     navigate("/auth");
   };
 

@@ -1,6 +1,4 @@
-
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,63 +14,34 @@ type Profile = {
 
 const UserProfile = () => {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [updating, setUpdating] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      fetchProfile();
-    }
-  }, [user]);
-
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single();
-        
-      if (error) {
-        throw error;
-      }
-      
-      if (data) {
-        setFullName(data.full_name || "");
-        setAvatarUrl(data.avatar_url || "");
-      }
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-      toast.error("Failed to load profile");
-    } finally {
+  // Mock profile data for frontend development
+  useState(() => {
+    setLoading(true);
+    setTimeout(() => {
+      // Mock profile data
+      setFullName("Demo User");
+      setAvatarUrl("https://github.com/shadcn.png");
       setLoading(false);
-    }
-  };
+    }, 500);
+  });
 
   const updateProfile = async () => {
     try {
       setUpdating(true);
       
-      if (!user) return;
+      // Mock profile update - in a real app, this would update your backend
+      console.log("Updating profile:", {
+        fullName,
+        avatarUrl
+      });
       
-      const updates = {
-        id: user.id,
-        full_name: fullName,
-        avatar_url: avatarUrl,
-        updated_at: new Date().toISOString(),
-      };
-      
-      const { error } = await supabase
-        .from('profiles')
-        .upsert(updates);
-        
-      if (error) {
-        throw error;
-      }
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 800));
       
       toast.success("Profile updated successfully");
     } catch (error) {

@@ -1,7 +1,5 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -48,25 +46,17 @@ const DonationForm = () => {
     setProcessing(true);
     
     try {
-      // For demo purposes, we'll simulate a payment and create a donation record
-      // In a production environment, this would call a Stripe or other payment API
+      // Mock donation processing - in a real app, this would call your payment backend
+      console.log("Processing donation:", {
+        amount,
+        paymentMethod,
+        isAnonymous,
+        notes,
+        userId: user?.id || "anonymous"
+      });
       
       // Simulate payment processing delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Create donation record in Supabase
-      const { error } = await supabase
-        .from('donations')
-        .insert({
-          user_id: user?.id || null,
-          amount: Number(amount),
-          payment_method: paymentMethod,
-          payment_status: "succeeded",
-          is_anonymous: isAnonymous,
-          notes: notes || null
-        });
-        
-      if (error) throw error;
       
       toast.success("Thank you for your generous donation!");
       navigate("/donation-success", { 

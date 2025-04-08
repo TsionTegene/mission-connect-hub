@@ -1,11 +1,8 @@
-
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
 import { sendEventConfirmation } from "@/utils/email";
 
 type EventRegistrationProps = {
@@ -13,8 +10,6 @@ type EventRegistrationProps = {
   eventTitle: string;
   onClose: () => void;
 };
-
-type RegistrationInsert = Database["public"]["Tables"]["registrations"]["Insert"];
 
 const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationProps) => {
   const [formData, setFormData] = useState({
@@ -41,23 +36,14 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
     setLoading(true);
     
     try {
-      // Create a properly typed registration data object
-      const registrationData: RegistrationInsert = {
-        event_id: eventId.toString(), // Ensure event_id is a string
-        event_title: eventTitle,
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        notes: formData.notes || null,
-      };
+      // Mock registration - in a real app, this would send data to your backend
+      console.log("Registering for event:", {
+        eventId,
+        eventTitle,
+        ...formData
+      });
       
-      const { error } = await supabase
-        .from('registrations')
-        .insert(registrationData);
-
-      if (error) throw error;
-      
-      // Send confirmation email
+      // Mock sending confirmation email
       await sendEventConfirmation(formData.name, formData.email, eventTitle);
       
       toast.success("You have successfully registered for this event!");
