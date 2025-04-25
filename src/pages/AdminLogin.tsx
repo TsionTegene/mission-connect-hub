@@ -76,7 +76,9 @@ const AdminLogin = () => {
       
       // Successfully logged in as admin
       toast.success("Logged in successfully");
-      navigate("/admin/dashboard");
+      // Reload page so dashboard sees the updated mock login context
+      window.location.replace("/admin/dashboard");
+      // navigate("/admin/dashboard"); // ← old code: REPLACED with window.location.replace
     } catch (error) {
       console.error("Unexpected error during login:", error);
       toast.error("An unexpected error occurred");
