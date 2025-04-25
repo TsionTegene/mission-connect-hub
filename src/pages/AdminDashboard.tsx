@@ -16,12 +16,20 @@ const AdminDashboard = () => {
   const { user, loading, isAdmin, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState("events");
   const navigate = useNavigate();
+  const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Redirect if user is not logged in or not an admin
-    if (!loading && (!user || !isAdmin)) {
-      toast.error("You need admin privileges to access this page");
-      navigate("/admin/login");
+    // Only run redirect check AFTER loading finishes!
+    if (!loading) {
+      if (!user || !isAdmin) {
+        setRedirectMessage("You need admin privileges to access this page");
+        // Give toast a moment before redirect, so user sees the message
+        setTimeout(() => {
+          navigate("/admin/login");
+        }, 1200);
+      } else {
+        setRedirectMessage(null);
+      }
     }
   }, [user, loading, isAdmin, navigate]);
 
@@ -29,8 +37,19 @@ const AdminDashboard = () => {
     return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   }
 
+  if (redirectMessage) {
+    // Show error while briefly staying before redirect
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="bg-red-100 text-red-700 px-8 py-4 rounded-md shadow">
+          {redirectMessage}
+        </div>
+      </div>
+    );
+  }
+
   if (!user || !isAdmin) {
-    return null; // Will redirect in useEffect
+    return null; // Will redirect in useEffect, after showing a message
   }
 
   return (
