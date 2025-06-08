@@ -7,10 +7,12 @@ type AdminSignupFormProps = {
   email: string;
   username: string;
   password: string;
+  inviteCode: string;
   loading: boolean;
   onEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInviteCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent) => void;
 };
 
@@ -18,13 +20,28 @@ const AdminSignupForm: React.FC<AdminSignupFormProps> = ({
   email,
   username,
   password,
+  inviteCode,
   loading,
   onEmailChange,
   onUsernameChange,
   onPasswordChange,
+  onInviteCodeChange,
   onSubmit
 }) => (
   <form onSubmit={onSubmit} className="space-y-4">
+    <div className="space-y-2">
+      <label htmlFor="invitecode-signup" className="text-sm font-medium">
+        Invite Code
+      </label>
+      <Input
+        id="invitecode-signup"
+        name="invite_code"
+        placeholder="Enter invite code"
+        value={inviteCode}
+        onChange={onInviteCodeChange}
+        required
+      />
+    </div>
     <div className="space-y-2">
       <label htmlFor="email-signup" className="text-sm font-medium">
         Email

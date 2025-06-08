@@ -5,9 +5,10 @@ import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Link } from "react-router-dom";
 import EventRegistration from "./EventRegistration";
+import { fetchEvents as fetchBackendEvents } from "@/services/eventService";
 
 // Define an event type
-type Event = {
+export type Event = {
   id: string;
   title: string;
   date: string;
@@ -21,9 +22,10 @@ type Event = {
 };
 
 const Events = () => {
-  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -32,60 +34,23 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      
-      // Use mock data since we're not using Supabase backend anymore
-      const mockEvents: Event[] = [
-        {
-          id: "1",
-          title: "Community Prayer Breakfast",
-          date: "June 15, 2025",
-          time: "8:00 AM - 10:00 AM",
-          location: "Mulu Wongel Church",
-          description:
-            "Join us for a morning of fellowship, prayer, and breakfast as we lift up our community's needs together.",
-          image:
-            "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNvbW11bml0eSUyMHByYXllciUyMGJyZWFrZmFzdHxlbnwwfHwwfHx8MA%3D%3D",
-          created_at: new Date().toISOString(),
-          is_paid: false,
-          price: null
-        },
-        {
-          id: "2",
-          title: "Mission Trip to Omo",
-          date: "March 13-17, 2025",
-          time: "All Day",
-          location: "South Omo, Jinka",
-          description:
-            "Our annual mission trip focused on construction projects and children's ministry in underserved communities.",
-          image:
-            "https://images.unsplash.com/photo-1524734627574-bbb084c4ee66?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDl8fHxlbnwwfHx8fHw%3D",
-          created_at: new Date().toISOString(),
-          is_paid: true,
-          price: 250
-        },
-        {
-          id: "3",
-          title: "Worship Night",
-          date: "August 5, 2025",
-          time: "7:00 PM - 9:00 PM",
-          location: "Mulu Wongel Church",
-          description:
-            "An evening dedicated to praise and worship, featuring our worship team and guest musicians.",
-          image:
-            "https://images.unsplash.com/photo-1473177104440-ffee2f376098?auto=format&fit=crop&w=800&q=80",
-          created_at: new Date().toISOString(),
-          is_paid: false,
-          price: null
-        },
-      ];
-      
-      setUpcomingEvents(mockEvents);
+      const res = await fetchBackendEvents();
+      const fetchedEvents = res?.data ?? res;
+      if (Array.isArray(fetchedEvents)) {
+         console.log(" Events with image:", fetchedEvents.map(e => ({
+        title: e.title,
+        image: e.image
+      })));
+        setEvents(fetchedEvents);
+      }
     } catch (error) {
       console.error("Unexpected error fetching events:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  const visibleEvents = showAll ? events : events.slice(0, 3);
 
   return (
     <section id="events" className="py-12 md:py-20 section-accent">
@@ -96,63 +61,58 @@ const Events = () => {
           </span>
           <h2 className="section-title">Events & Gatherings</h2>
           <p className="section-subtitle mx-auto text-center">
-            Join us for these upcoming opportunities to connect, serve, and grow in faith together.
+            Uniting believers through worship, mission trips, and fundraising to serve and disciple the unreached.
           </p>
         </AnimatedSection>
-        
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-          {upcomingEvents.map((event, index) => (
+          {visibleEvents.map((event, index) => (
             <AnimatedSection key={event.id} delay={index * 100}>
               <div className="glass rounded-xl overflow-hidden h-full flex flex-col">
                 <div className="h-48 overflow-hidden">
                   <img 
-                    src={event.image || ""} 
+                    src={event.image || "https://via.placeholder.com/400x300?text=No+Image"}  
                     alt={event.title} 
                     className="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:scale-110"
                   />
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-xl font-medium mb-3">{event.title}</h3>
-                  
+
                   <div className="flex items-center mb-2 text-sm text-foreground/80">
                     <Calendar className="h-4 w-4 mr-2" />
-                    <span>{event.date}</span>
+                    <span>{new Date(event.date).toLocaleDateString()}</span>
                   </div>
-                  
+
                   {event.time && (
                     <div className="flex items-center mb-2 text-sm text-foreground/80">
                       <Clock className="h-4 w-4 mr-2" />
                       <span>{event.time}</span>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center mb-2 text-sm text-foreground/80">
                     <MapPin className="h-4 w-4 mr-2" />
                     <span>{event.location}</span>
                   </div>
-                  
+
                   {event.is_paid && event.price && (
                     <div className="flex items-center mb-2 text-sm font-medium">
                       <DollarSign className="h-4 w-4 mr-2 text-primary" />
                       <span>${event.price} USD</span>
                     </div>
                   )}
-                  
+
                   <p className="text-foreground/80 text-sm flex-1 mb-4">{event.description || ""}</p>
-                  
+
                   {event.is_paid && event.price ? (
                     <Link to={`/event-payment/${event.id}`}>
-                      <Button className="w-full mt-auto">
-                        Register & Pay
-                      </Button>
+                      <Button className="w-full mt-auto">Register & Pay</Button>
                     </Link>
                   ) : (
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button 
-                          className="w-full mt-auto"
-                          onClick={() => setSelectedEvent(event)}
-                        >
+                        <Button className="w-full mt-auto" onClick={() => setSelectedEvent(event)}>
                           Register Now
                         </Button>
                       </DialogTrigger>
@@ -172,14 +132,16 @@ const Events = () => {
             </AnimatedSection>
           ))}
         </div>
-        
-        <div className="mt-12 text-center">
-          <AnimatedSection>
-            <a href="#" className="button-outline">
-              View All Events
-            </a>
-          </AnimatedSection>
-        </div>
+
+        {events.length > 3 && (
+          <div className="mt-12 text-center">
+            <AnimatedSection>
+              <Button onClick={() => setShowAll(!showAll)} variant="outline">
+                {showAll ? "Show Less" : "View All Events"}
+              </Button>
+            </AnimatedSection>
+          </div>
+        )}
       </div>
     </section>
   );

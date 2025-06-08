@@ -9,7 +9,7 @@ const AboutHero = () => {
         <AnimatedSection>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-primary">About Us</h1>
           <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">
-            Learn about our history, values, and the people who make Live Message possible.
+            Learn about our history, values, and the people who make Live Message Global Gospel Movement Ministry possible.
           </p>
         </AnimatedSection>
       </div>

@@ -6,15 +6,15 @@ const Statement = () => {
   const beliefs = [
     {
       title: "The Bible",
-      content: "We believe the Bible is the inspired, infallible Word of God and our ultimate authority for faith and practice."
+      content: "We believe the Bible is the inspired, infallible, and authoritative Word of God, our final guide in all matters of faith and life."
     },
     {
-      title: "God",
+      title: "The Trinity",
       content: "We believe in one God, eternally existing in three persons: Father, Son, and Holy Spirit."
     },
     {
       title: "Jesus Christ",
-      content: "We believe in the deity of Jesus Christ, His virgin birth, sinless life, atoning death, bodily resurrection, and His coming return."
+      content: "We believe Jesus Christ is the eternal Son of God—fully God and fully man—who was born of a virgin, lived a sinless life, died on the cross for our sins, rose bodily from the dead, and will return in power and glory."
     },
     {
       title: "Salvation",
@@ -22,14 +22,31 @@ const Statement = () => {
     },
     {
       title: "The Holy Spirit",
-      content: "We believe in the present ministry of the Holy Spirit who indwells believers and empowers them to live godly lives."
+      content: "We believe the Holy Spirit indwells and empowers believers for holy living, spiritual gifts, and mission."
     },
     {
       title: "The Church",
-      content: "We believe the church is the body of Christ, consisting of all believers, called to worship, fellowship, and service."
+      content: "We believe the Church is the Body of Christ, called to worship, disciple, serve, and evangelize. We affirm both the local and global Church."
+    },
+    {
+      title: "Mission and the Second Coming",
+      content: "We believe in Christ’s imminent return and in the urgency of fulfilling the Great Commission before His return—making disciples of all nations."
     }
   ];
-
+const foundations = [
+    {
+      title: "Matthew 28:19–20 — The Great Commission",
+      content: "'Go therefore and make disciples of all nations, baptizing them... and teaching them to obey everything I have commanded you.' We obey Christ’s global call to make disciples in every nation– baptizing, teaching, and walking in His promised presence."
+    },
+    {
+      title: "Romans 15:20 — The Apostolic Vision",
+      content: "'It has always been my ambition to preach the gospel where Christ was not known...' Our ministry is driven by a passion to reach unreached peoples, especially those without access to the Gospel."
+    },
+    {
+     title: "2nd Corinthians 3:3 — Living the Message",
+      content: "'You are a letter from Christ... written not with ink but with the Spirit of the living God.' We believe in being a Live Message– a visible, Spirit-written letter of Christ, demonstrated through our lives, not just our words."
+    }
+  ];
   return (
     <section id="statement" className="py-12 md:py-20 bg-primary/5">
       <div className="section-container">
@@ -49,7 +66,7 @@ const Statement = () => {
               <Heart className="h-16 w-16 text-primary mb-6" />
               <h3 className="text-2xl font-medium mb-4">Our Core Commitments</h3>
               <p className="text-foreground/80">
-                These beliefs aren't just statements we affirm—they're the foundation that informs every aspect of our ministry. They guide our decisions, shape our programs, and direct our service to others.
+                The ministry is guided by ten core commitments: living by biblical truth, depending on prayer and fasting, prioritizing the unreached, serving the whole person, relying on the Holy Spirit, making multiplying disciples, communicating the Gospel in culturally relevant ways, practicing integrity and accountability, promoting unity in the Body of Christ, and following Christ with sacrificial obedience.
               </p>
               <div className="mt-8">
                 <Shield className="h-12 w-12 mx-auto text-accent" />
@@ -64,6 +81,19 @@ const Statement = () => {
                   <div key={index} className="border-b border-white/20 pb-4 last:border-b-0 last:pb-0">
                     <h4 className="text-lg font-medium mb-2">{belief.title}</h4>
                     <p className="text-foreground/80 text-sm">{belief.content}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AnimatedSection>
+          <h2 className="section-title">Biblical Foundations</h2>
+           <AnimatedSection delay={200} className="md:w-2/3">
+            <div className="glass p-8 rounded-xl">
+              <div className="grid md:grid-cols-2 gap-6">
+                {foundations.map((foundation, index) => (
+                  <div key={index} className="border-b border-white/20 pb-4 last:border-b-0 last:pb-0">
+                    <h4 className="text-lg font-medium mb-2">{foundation.title}</h4>
+                    <p className="text-foreground/80 text-sm">{foundation.content}</p>
                   </div>
                 ))}
               </div>

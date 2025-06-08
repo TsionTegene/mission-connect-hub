@@ -4,12 +4,14 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { sendEventConfirmation } from "@/utils/email";
+import { registerForEvent } from "@/services/registrationsService";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
-type EventRegistrationProps = {
-  eventId: string | number;
+interface EventRegistrationProps {
+  eventId: number;
   eventTitle: string;
   onClose: () => void;
-};
+}
 
 const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationProps) => {
   const [formData, setFormData] = useState({
@@ -26,26 +28,26 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
-    
+
     if (!formData.name || !formData.email || !formData.phone) {
       toast.error("Please fill in all required fields");
       return;
     }
-    
-    setLoading(true);
-    
+
+
     try {
-      // Mock registration - in a real app, this would send data to your backend
-      console.log("Registering for event:", {
-        eventId,
+      await registerForEvent({
+        event_id: Number(eventId),
         eventTitle,
-        ...formData
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        notes: formData.notes || null,
       });
-      
-      // Mock sending confirmation email
+
       await sendEventConfirmation(formData.name, formData.email, eventTitle);
-      
       toast.success("You have successfully registered for this event!");
       onClose();
     } catch (error) {
@@ -58,12 +60,11 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-md mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Register for {eventTitle}</h2>
+      <DialogTitle>Register for {eventTitle}</DialogTitle>
+      <DialogDescription>Please complete the form below to join this event.</DialogDescription>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium">
-            Full Name*
-          </label>
+          <label htmlFor="name" className="text-sm font-medium">Full Name*</label>
           <Input
             id="name"
             name="name"
@@ -73,11 +74,9 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
             required
           />
         </div>
-        
+
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            Email Address*
-          </label>
+          <label htmlFor="email" className="text-sm font-medium">Email Address*</label>
           <Input
             id="email"
             name="email"
@@ -88,11 +87,9 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
             required
           />
         </div>
-        
+
         <div className="space-y-2">
-          <label htmlFor="phone" className="text-sm font-medium">
-            Phone Number*
-          </label>
+          <label htmlFor="phone" className="text-sm font-medium">Phone Number*</label>
           <Input
             id="phone"
             name="phone"
@@ -102,11 +99,9 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
             required
           />
         </div>
-        
+
         <div className="space-y-2">
-          <label htmlFor="notes" className="text-sm font-medium">
-            Additional Notes
-          </label>
+          <label htmlFor="notes" className="text-sm font-medium">Additional Notes</label>
           <Textarea
             id="notes"
             name="notes"
@@ -116,14 +111,10 @@ const EventRegistration = ({ eventId, eventTitle, onClose }: EventRegistrationPr
             rows={3}
           />
         </div>
-        
+
         <div className="flex justify-end space-x-3 pt-3">
-          <Button type="button" variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? "Registering..." : "Register Now"}
-          </Button>
+          <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+          <Button type="submit" disabled={loading}>{loading ? "Registering..." : "Register Now"}</Button>
         </div>
       </form>
     </div>

@@ -1,4 +1,4 @@
-
+// hooks/useAuth.tsx
 import React, { useState, createContext, useContext, ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,7 @@ type AuthContextType = {
   session: any | null;
   user: User | null;
   signOut: () => Promise<void>;
+  refreshAuth: () => void;
   loading: boolean;
   isAdmin: boolean;
 };
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
   signOut: async () => {},
+  refreshAuth: () => {},
   loading: true,
   isAdmin: false,
 });
@@ -30,40 +32,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Check for user in localStorage (mock auth persistence)
-    const checkForUser = () => {
-      const savedUser = localStorage.getItem('mockUser');
-      if (savedUser) {
-        try {
-          const parsedUser = JSON.parse(savedUser);
-          setUser(parsedUser);
-          setSession({ user: parsedUser });
-          
-          // Set admin status based on email containing "admin"
-          setIsAdmin(parsedUser.email.includes("admin"));
-        } catch (e) {
-          console.error("Error parsing saved user:", e);
-          localStorage.removeItem('mockUser');
-        }
+  const refreshAuth = () => {
+    const storedUser = localStorage.getItem("adminUser");
+    const storedRole = localStorage.getItem("adminRole");
+
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        const isAdminFlag = storedRole === "admin" || parsedUser.email?.includes("admin");
+
+        setUser(parsedUser);
+        setSession({ user: parsedUser });
+        setIsAdmin(isAdminFlag);
+      } catch (e) {
+        console.error("Failed to parse localStorage auth");
+        localStorage.clear();
+        setUser(null);
+        setSession(null);
+        setIsAdmin(false);
       }
-      setLoading(false);
-    };
-    
-    checkForUser();
+    } else {
+      setUser(null);
+      setSession(null);
+      setIsAdmin(false);
+    }
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    refreshAuth();
+    setLoading(false);
   }, []);
 
   const signOut = async () => {
-    // Clear user session
-    localStorage.removeItem('mockUser');
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("adminRole");
+    localStorage.removeItem("adminToken");
     setSession(null);
     setUser(null);
     setIsAdmin(false);
-    navigate("/auth");
+    navigate("/admin/login");
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, signOut, loading, isAdmin }}>
+    <AuthContext.Provider value={{ session, user, signOut, refreshAuth, loading, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

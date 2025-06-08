@@ -5,25 +5,25 @@ import { cn } from "@/lib/utils";
 const Programs = () => {
   const programs = [
     {
-      title: "Community Development",
+      title: "Cross-Cultural Missions",
       description:
-        "Empowering communities through sustainable infrastructure projects, local leadership training, and economic opportunity initiatives.",
+        "We build Gospel-centered connections across cultures, bringing Christ to unreached communities through presence, partnership, and prayer.",
       image:
-        "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1509099896299-af46ad97ff57?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEwfHx8ZW58MHx8fHx8",
     },
     {
-      title: "Education Support",
+      title: "Leadership Development",
       description:
-        "Providing access to quality education through school construction, teacher training, scholarship programs, and educational resources.",
+        "We equip and empower indigenous leaders to disciple others, plant churches, and lead sustainable Gospel movements in their own regions.",
       image:
-        "https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1513759565286-20e9c5fad06b?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGVhZGVyc2hpcHxlbnwwfHwwfHx8MA%3D%3D",
     },
     {
-      title: "Health & Wellness",
+      title: "Evangelism & Discipleship",
       description:
-        "Improving community health through medical missions, preventative care education, clean water initiatives, and nutrition programs.",
+        "We reach the unreached by proclaiming the Gospel and making disciples through Spirit-led evangelism, relational ministry, and holistic care.",
       image:
-        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1621354898913-d3cec6b17162?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGV2YW5nZWxpc218ZW58MHx8MHx8fDA%3D",
     },
   ];
 
@@ -83,10 +83,9 @@ const Programs = () => {
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white rounded-full">
             Our Work
           </span>
-          <h2 className="section-title">Transformative Programs</h2>
+          <h2 className="section-title">Global Gospel Impact</h2>
           <p className="section-subtitle mx-auto text-center">
-            Through our strategic programs, we address critical needs while
-            building capacity for long-term change.
+            We connect, equip, and reach communities worldwide through Christ-centered mission, leadership training, and disciple-making.
           </p>
         </AnimatedSection>
 
@@ -118,14 +117,6 @@ const Programs = () => {
                     <p className="text-foreground/80 text-sm flex-1">
                       {program.description}
                     </p>
-                    <div className="mt-4">
-                      <a
-                        href="#"
-                        className="text-primary text-sm font-medium hover:underline"
-                      >
-                        Learn more
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>

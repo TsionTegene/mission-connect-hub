@@ -3,19 +3,19 @@ import AnimatedSection from "./AnimatedSection";
 const Mission = () => {
   const values = [
     {
-      title: "Faith",
+      title: "Christ-Centered Message",
       description:
-        "We are guided by our faith in action, working to serve others with compassion and dignity.",
+        "Jesus is the foundation and focus of our ministry - Jesus is our message, our model, and we preach Him boldly and live for His glory.",
     },
     {
-      title: "Service",
+      title: "Global Impact",
       description:
-        "Through dedicated service, we empower communities to build sustainable futures for themselves.",
+        "We are called to reach nations with the gospel making disciples, and expanding God’s kingdom, and make lasting kingdom impact worldwide.",
     },
     {
-      title: "Community",
+      title: "Spirit-Empowered Living",
       description:
-        "We believe in the power of community to create meaningful, lasting change around the world.",
+        "We depend fully on the Holy Spirit for guidance, power, and transformation in life and ministry.",
     },
   ];
 
@@ -28,9 +28,9 @@ const Mission = () => {
       <div className="section-container">
         <AnimatedSection>
           <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-secondary rounded-full">
-            Our Mission
+            Why We Go
           </span>
-          <h2 className="section-title">Empowering Lives Through Compassion</h2>
+          <h2 className="section-title">Connecting, Equipping, and Reaching the Unreached</h2>
         </AnimatedSection>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mt-16">
@@ -38,7 +38,7 @@ const Mission = () => {
             <div className="relative">
               <div className="aspect-video rounded-2xl overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.unsplash.com/photo-1542242476-5a3565835a38?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cm9hZHxlbnwwfHwwfHx8MA%3D%3D"
                   alt="Volunteers working in community"
                   className="object-cover w-full h-full"
                 />
@@ -49,16 +49,15 @@ const Mission = () => {
 
           <AnimatedSection delay={300}>
             <p className="text-lg mb-6 text-balance">
-              Live Message is dedicated to transforming lives through
-              compassionate service, sustainable development, and spiritual
-              growth. We work alongside local communities to address immediate
-              needs while building lasting solutions.
+              We are committed to connecting, equipping, and reaching communities with the life-transforming 
+              message of Jesus Christ, 
+              especially focusing on reaching the unreached where Christ has not been named.
             </p>
-            <p className="text-lg mb-8 text-balance">
+            {/* <p className="text-lg mb-8 text-balance">
               For over 10 years, our volunteers and partners have served in more
               than 20 countries, responding to crises, establishing educational
               programs, and providing healthcare to those in need.
-            </p>
+            </p> */}
             <a href="#programs" className="button-primary">
               Explore Our Programs
             </a>

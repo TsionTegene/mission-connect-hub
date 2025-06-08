@@ -1,36 +1,56 @@
 
 import { User, Users, GraduationCap } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-
+import WImage from "../../assets/w.jpg";
+import GMImage from "../../assets/gm.jpg";
+import DMImage from "../../assets/dm.jpg";
+import DNImage from "../../assets/dn.jpg";
+import DDMImage from "../../assets/ddm.jpg";
+import HSImage from "../../assets/hs.jpg";
+import GTImage from "../../assets/gt.jpg";
 const Leadership = () => {
   const leaders = [
     {
-      name: "Dr. Abebe Kebede",
-      title: "Executive Director",
-      bio: "With over 10 years of experience in nonprofit leadership, Dr. Abebe brings vision and strategic direction to Live Message.",
-      image:
-        "https://images.unsplash.com/photo-1542296153-d2d387514d97?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZXRoaW9waWFuJTIwbWFufGVufDB8fDB8fHww",
+      name: "Dr. Wondwosen Moureta (DVM, BTh, MSc in Intercultural Studies)",
+      title: "President, short term missionary",
+      bio: "Dr. Wondwosen Moureta, veterinarian and theologian, is the founder of Live Message Ministry, dedicated to equipping the Church to reach unreached communities through discipleship, missions, and Spirit-led leadership.",
+      image: WImage,
     },
     {
-      name: "Sarah Bekele",
-      title: "Director of Global Operations",
-      bio: "Sarah oversees our international programs across 20 countries, ensuring effective implementation and impact.",
-      image:
-        "https://images.unsplash.com/photo-1718203694879-766b434639f2?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fGV0aGlvcGlhbiUyMHdvbWFufGVufDB8fDB8fHww",
+      name: "Getu Melese",
+      title: "Finance Officer, logistic and support coordinator",
+      bio: "Getu Melese is a devoted Christian, youth leader, and entrepreneur with over 15 years in ministry. He serves as Finance Officer at Live Message Ministry, supporting global missions.",
+      image: GMImage,
     },
     {
-      name: "Kebede Abebe",
-      title: "Chief Financial Officer",
-      bio: "Kebede ensures strategic stewardship of resources and transparent financial management.",
-      image:
-        "https://images.unsplash.com/photo-1555908845-4dbd45b750de?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGV0aGlvcGlhbiUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
+      name: "Pastor Daniel Medi  (BTh, MSc in Intercultural Studies)",
+      title: "Vice president, short term missionary, prayer and intercession leader",
+      bio: "Pastor Daniel Medi Shifa has over 16 years in ministry, dedicated to discipleship and missions. Theologically equipped, he is passionate about reaching and discipling ethnic groups in Ethiopia and beyond.",
+      image: DMImage,
     },
     {
-      name: "Dr. Amare Bekele",
-      title: "Director of Education",
-      bio: "Dr. Amare leads our educational initiatives, developing curriculum and training programs worldwide.",
-      image:
-        "https://images.unsplash.com/photo-1705993235922-e09b232131a6?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTh8fGV0aGlvcGlhbiUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D",
+      name: "Dawit Nimani (Bsc, BTh)",
+      title: "Mission field coordinator, short term missionary",
+      bio: "Dawit Nimani leads healing and Holy Spirit baptism programs, teaching restoration and salvation. With degrees in Nursing and Theology, he is pursuing further studies to strengthen his ministry impact.",
+      image: DNImage,
+    },   
+    {
+      name: "Hana Sisay (BSc, BTh, MSc in Leadership)",
+      title: "Mission field coordinator, short term missionary, compassion ministry leader",
+      bio: "Hanna Sisay, with degrees in Nursing, Theology, and Christian Leadership, passionately leads and teaches Sunday school, nurturing the next generation to grow in faith and impact their communities.",
+      image: HSImage,
+    },
+    {
+      name: "Dr. Daniel Mekonin (DVM, BTh)",
+      title: "Mission field coordinator, short term missionary",
+      bio: "Dr. Daniel Mekonnen Kebede (DVM, Theology) is a church elder and youth leader with over 15 years of ministry experience, passionate about discipleship and mission. He is married with two daughters.",
+      image: DDMImage,
+    },
+    {
+      name: "Getu Tadese (BTh, MSc in Leadership)",
+      title: "Mission field coordinator, short term missionary",
+      bio: "Getu Tadesse brings over 30 years of church leadership, serving in administration, mentoring, and outreach. Holding a master’s in leadership, he fosters church unity, growth, and Christ-centered community impact.",
+      image: GTImage,
     },
   ];
 
@@ -69,7 +89,7 @@ const Leadership = () => {
             {leaders.map((leader, index) => (
               <AnimatedSection key={index} delay={index * 100}>
                 <div className="glass rounded-xl overflow-hidden h-full flex flex-col">
-                  <div className="h-48 overflow-hidden">
+                  <div className="h-72 overflow-hidden">
                     <img 
                       src={leader.image} 
                       alt={leader.name} 
@@ -87,7 +107,7 @@ const Leadership = () => {
           </div>
         </div>
 
-        <div className="mt-16">
+        {/* <div className="mt-16">
           <AnimatedSection>
             <h3 className="text-2xl font-light mb-8 flex items-center">
               <GraduationCap className="h-6 w-6 mr-2" />
@@ -107,7 +127,7 @@ const Leadership = () => {
               </div>
             </div>
           </AnimatedSection>
-        </div>
+        </div> */}
       </div>
     </section>
   );

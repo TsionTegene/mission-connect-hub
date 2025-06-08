@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { HandHeart, Users, Mail, PencilLine, HeartHandshake } from "lucide-react";
+import { HandHeart, Users, Mail, PencilLine, HeartHandshake, Hand, Cross } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -27,32 +27,25 @@ const GetInvolved = () => {
   const involvementOptions = [
     {
       icon: <HandHeart className="h-10 w-10 text-primary" />,
-      title: "Volunteer",
+      title: "Volunteer Opportunities",
       description:
         "Serve alongside us in various capacities based on your skills, availability, and passion.",
       action: "Join Our Team",
     },
     {
       icon: <Users className="h-10 w-10 text-primary" />,
-      title: "Small Groups",
+      title: "Partner with us",
       description:
         "Connect with others in a small group setting for fellowship, study, and growth.",
       action: "Join Our Team",
     },
     {
-      icon: <Mail className="h-10 w-10 text-primary" />,
-      title: "Stay Updated",
-      description:
-        "Sign up for our newsletter to receive mission updates, prayer requests, and event information.",
-      action: "Subscribe",
-    },
-    {
-      icon: <PencilLine className="h-10 w-10 text-primary" />,
-      title: "Prayer Support",
+      icon: <Cross className="h-10 w-10 text-primary" />,
+      title: "Pray with us",
       description:
         "Join our prayer team to lift up the needs of our mission fields and communities we serve.",
       action: "Subscribe",
-    },
+    }
   ];
 
   return (
@@ -233,9 +226,9 @@ const GetInvolved = () => {
         <div className="mt-16 glass-dark rounded-xl p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <AnimatedSection>
-              <h3 className="text-2xl md:text-3xl font-medium mb-4">Ready to Make an Impact?</h3>
+              <h3 className="text-2xl md:text-3xl font-medium mb-4">Get in Touch</h3>
               <p className="text-foreground/80 mb-6">
-                We're always looking for compassionate individuals who want to use their gifts and talents to serve others. Whether you have a little time or a lot, there's a place for you in our mission.
+                We’re here to answer your questions and connect you with our team.
               </p>
               <Button className="w-full md:w-auto">Contact Our Team</Button>
             </AnimatedSection>

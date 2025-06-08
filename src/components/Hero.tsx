@@ -22,7 +22,7 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <div 
-          className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=1800&q=80')] bg-cover bg-center"
+          className="absolute inset-0 bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcTNSUNZFkOvd4F1neXGkIQ2hZx7fQRV4egw&s')] bg-cover bg-center"
           style={{ opacity: 0.7 }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-primary/40 to-background/90"></div>
@@ -42,21 +42,21 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-20 flex flex-col items-center justify-center h-full px-6 text-center">
         <span className="inline-block mb-4 px-3 py-1 text-xs tracking-widest uppercase bg-white/10 backdrop-blur-sm rounded-full animate-fade-in">
-          Faith • Service • Community
+          Connecting • Equipping • Reaching
         </span>
         <h1 className="text-5xl md:text-7xl font-light tracking-tight mb-6 max-w-4xl animate-fade-up" style={{animationDelay: "300ms"}}>
-          Bringing Hope to Communities Around the World
+          Reaching the Unreached
         </h1>
         <p className="text-lg md:text-xl text-foreground/80 mb-10 max-w-2xl animate-fade-up" style={{animationDelay: "600ms"}}>
-          We believe in the power of compassion and service to transform lives and build a more just world.
+          We live the Gospel and lead the Church to the world’s forgotten places where Christ is not yet known, and disciples are yet to be made.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{animationDelay: "900ms"}}>
           <a href="#donate" className="button-primary">
             Support Our Mission
           </a>
-          <a href="#mission" className="button-outline">
+          {/* <a href="#mission" className="button-outline">
             Learn More
-          </a>
+          </a> */}
         </div>
       </div>
 

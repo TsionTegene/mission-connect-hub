@@ -45,7 +45,7 @@ const App = () => (
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="description" content="Mulu Wongel Church - Strengthening communities through faith, service, and compassion" />
-          <title>Mulu Wongel Church</title>
+          <title>Live Message</title>
           <link rel="icon" href="/favicon.ico" />
         </Helmet>
         

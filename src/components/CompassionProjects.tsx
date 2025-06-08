@@ -1,6 +1,6 @@
 
 import { useRef } from "react";
-import { Droplet, Home, Heart, Utensils, BookOpen, Baby, Dog, Sprout, Speech } from "lucide-react";
+import { Droplet, Home, Heart, Utensils, BookOpen, Baby, Dog, Sprout, Speech, HelpingHand } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
@@ -9,43 +9,43 @@ const CompassionProjects = () => {
   const projects = [
     {
       icon: <Baby className="h-6 w-6 text-primary" />,
-      title: "Children Ministry",
+      title: "Children's Ministry",
       description:
-        "Providing clean water wells and sanitation education to communities lacking access to safe drinking water.",
-      stat: "27",
-      statLabel: "Wells Completed",
+        "We nurture the next generation through discipleship, education, and relational care planting seeds of faith and hope in the hearts of children and their families.",
+      stat: "",
+      statLabel: "",
       image:
         "https://images.unsplash.com/photo-1476234251651-f353703a034d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGNoaWxkcmVufGVufDB8fDB8fHww",
     },
     {
       icon: <Dog className="h-6 w-6 text-primary" />,
-      title: "Veternary Services",
+      title: "Veternary Care Outreach",
       description:
-        "Building sustainable housing for families living in unsafe or inadequate shelter conditions.",
-      stat: "142",
-      statLabel: "Homes Built",
+        "Through mobile veterinary services, we care for the livestock of vulnerable communities strengthening livelihoods and opening hearts to the Gospel through practical compassion.",
+      stat: "",
+      statLabel: "",
       image:
         "https://plus.unsplash.com/premium_photo-1661881918680-a3b2519f0298?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDE2fHx8ZW58MHx8fHx8",
     },
     {
       icon: <Sprout className="h-6 w-6 text-primary" />,
-      title: "Agriculture and Health Advices",
+      title: "Community Advisory Services",
       description:
-        "Combating hunger through sustainable agriculture training, food distribution, and nutrition education.",
-      stat: "1,200+",
-      statLabel: "Families Supported",
+        "We offer trusted advice and training on health, agriculture, environmental stewardship, and animal care empowering families to thrive with sustainable, Christ-honoring practices.",
+      stat: "",
+      statLabel: "",
       image:
         "https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGFncmljdWx0dXJlfGVufDB8fDB8fHww",
     },
     {
-      icon: <Speech className="h-6 w-6 text-primary" />,
-      title: "Testimony and Success Stories",
+      icon: <HelpingHand className="h-6 w-6 text-primary" />,
+      title: "Gospel & Basic Needs Support",
       description:
-        "Supporting children's education through school construction, teacher training, and educational resources.",
+        "We distribute Bibles to new churches and ministry teams, and provide clothing and essential items to individuals and families in need demonstrating Christ’s love in both word and deed.",
       stat: "15",
       statLabel: "Schools Supported",
       image:
-        "https://plus.unsplash.com/premium_photo-1661315600584-44560aeb8146?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dGVzdGltb255JTIwYW5kJTIwc3VjY2VzcyUyMHN0b3JpZXN8ZW58MHx8MHx8fDA%3D",
+        "https://plus.unsplash.com/premium_photo-1725408144734-fd60f47ccc72?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Z29zcGVsfGVufDB8fDB8fHww",
     },
   ];
   
@@ -103,7 +103,7 @@ const CompassionProjects = () => {
           </span>
           <h2 className="section-title">Compassion Projects</h2>
           <p className="section-subtitle mx-auto text-center">
-            Our compassion projects address critical needs while sharing God's love in tangible ways.
+           Driven by Christ’s love, our Compassion Ministries meet spiritual and practical needs to uplift lives and share the Gospel.
           </p>
         </AnimatedSection>
         
@@ -132,27 +132,13 @@ const CompassionProjects = () => {
                 </div>
                 <div className="p-5">
                   <h3 className="text-lg font-medium mb-2">{project.title}</h3>
-                  <p className="text-foreground/80 text-sm mb-4">{project.description}</p>
-                  
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-secondary rounded-lg p-3 text-center flex-1">
-                      {/* <div className="text-2xl font-bold text-primary">{project.stat}</div>
-                      <div className="text-xs text-foreground/70">{project.statLabel}</div> */}
-                    </div>
-                    {/* <Heart className="h-6 w-6 text-primary animate-pulse-soft" /> */}
-                  </div>
+                  <p className="text-foreground/80 text-sm mb-4">{project.description}</p>  
                   
                   <Button variant="outline" className="w-full mt-2">Support This Project</Button>
                 </div>
               </div>
             </AnimatedSection>
           ))}
-        </div>
-        
-        <div className="mt-16 text-center">
-          <AnimatedSection>
-            <Button className="mx-auto">View All Projects</Button>
-          </AnimatedSection>
         </div>
       </div>
     </section>

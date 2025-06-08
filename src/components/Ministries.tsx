@@ -1,33 +1,28 @@
 
-import { BookOpen, Church, GraduationCap, Globe, Users } from "lucide-react";
+import { BookOpen, Church, GraduationCap, Globe, Users, Phone, Cross } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
 
 const Ministries = () => {
   const ministryList = [
     {
       icon: <Church className="h-10 w-10 text-primary" />,
-      title: "Worship Ministry",
-      description: "Cultivating authentic worship experiences that inspire hearts and transform lives."
+      title: "Church planting and Evangelism",
+      description: "Establishing gospel-centered churches and reaching unreached communities through intentional evangelism and disciple-making."
     },
     {
-      icon: <BookOpen className="h-10 w-10 text-primary" />,
-      title: "Bible Studies",
-      description: "Exploring God's Word through engaging, thoughtful studies for all ages and spiritual journeys."
+      icon: <Cross className="h-10 w-10 text-primary" />,
+      title: "Crusade of Events",
+      description: "Proclaiming Christ boldly through large-scale gatherings, healing crusades, and strategic gospel events that ignite transformation."
     },
     {
       icon: <GraduationCap className="h-10 w-10 text-primary" />,
-      title: "Christian Education",
-      description: "Developing disciples through comprehensive biblical teaching and spiritual formation."
+      title: "Training and school",
+      description: "Equipping believers, leaders, and missionaries with sound biblical teaching and practical tools to fulfill the Great Commission."
     },
     {
-      icon: <Globe className="h-10 w-10 text-primary" />,
-      title: "Global Missions",
-      description: "Extending God's love across borders through strategic partnerships and mission trips."
-    },
-    {
-      icon: <Users className="h-10 w-10 text-primary" />,
-      title: "Community Outreach",
-      description: "Serving our local community through compassionate programs and relationship building."
+      icon: <Phone className="h-10 w-10 text-primary" />,
+      title: "Media and Communications",
+      description: "Using media to share the Gospel, tell mission stories, and mobilize the Church through impactful digital and print platforms."
     }
   ];
 
@@ -53,12 +48,6 @@ const Ministries = () => {
                   <h3 className="text-xl font-medium mb-3">{ministry.title}</h3>
                   <p className="text-foreground/80 text-sm flex-1">{ministry.description}</p>
                   <div className="mt-4">
-                    <a 
-                      href="#" 
-                      className="text-primary text-sm font-medium hover:underline"
-                    >
-                      Learn more
-                    </a>
                   </div>
                 </div>
               </div>

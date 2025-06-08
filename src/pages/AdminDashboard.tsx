@@ -19,6 +19,7 @@ const AdminDashboard = () => {
   const [redirectMessage, setRedirectMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log("Auth Check → user:", user, "isAdmin:", isAdmin, "loading:", loading);
     // Only run redirect check AFTER loading finishes!
     if (!loading) {
       if (!user || !isAdmin) {

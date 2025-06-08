@@ -1,5 +1,5 @@
 
-import { BookOpen, History as HistoryIcon } from "lucide-react";
+import { BookOpen, GitGraph, History as HistoryIcon, Medal } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 
 const History = () => {
@@ -12,7 +12,7 @@ const History = () => {
           </span>
           <h2 className="section-title">Our History</h2>
           <p className="section-subtitle mx-auto">
-            Since 2010, Live Message has been dedicated to transforming lives through compassionate service.
+            Since 2022, Live Message Global Gospel Movement Ministry has been dedicated to live the Gospel and take it to places where it is most needed especially where Christ is not yet known.
           </p>
         </AnimatedSection>
 
@@ -21,7 +21,7 @@ const History = () => {
             <div className="relative">
               <div className="aspect-video rounded-2xl overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80" 
+                  src="https://plus.unsplash.com/premium_photo-1726804820336-db042154b96a?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1pbi1zYW1lLXNlcmllc3wxfHx8ZW58MHx8fHx8" 
                   alt="Ministry founders" 
                   className="object-cover w-full h-full"
                 />
@@ -34,11 +34,13 @@ const History = () => {
             <div className="space-y-6">
               <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
-                  <HistoryIcon className="h-8 w-8 text-primary mt-1" />
+                  <HistoryIcon className="h-9 w-16 text-primary mt-1" />
                   <div>
                     <h3 className="text-xl font-medium mb-2">Our Beginnings</h3>
                     <p className="text-foreground/80">
-                      Founded by John and Mary Thompson in 2010, Live Message began as a small local outreach program serving the community of Ethiopia. What started as feeding the homeless once a week grew into a global ministry touching thousands of lives.
+                      Live Message Global Gospel Movement Ministry began in 2022, driven by a passion to live and proclaim the Gospel where Christ is not yet known.
+                      It started with a church plant in Gelan Guda, Central Ethiopia, but soon shifted focus to unreached people groups. This led to a long-term mission in South Omo Zone among the Hammar, Bana, and Tsemay tribes—some of Ethiopia’s most spiritually unreached communities. Through biannual mission trips,
+                      the ministry engages in evangelism, discipleship, church planting, and holistic services. From one church to a growing movement, the ministry continues by obedience, believing every believer is a living message—called to live, sent to go, and committed to reach.
                     </p>
                   </div>
                 </div>
@@ -46,11 +48,11 @@ const History = () => {
 
               <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
-                  <BookOpen className="h-8 w-8 text-primary mt-1" />
+                  <BookOpen className="h-9 w-16 text-primary mt-1" />
                   <div>
                     <h3 className="text-xl font-medium mb-2">Philosophy of Ministry</h3>
                     <p className="text-foreground/80">
-                      We believe in the transformative power of compassion combined with practical action. Our approach integrates spiritual guidance with tangible assistance, creating sustainable solutions that empower individuals and communities to thrive independently.
+                    The philosophy of ministry at Live Message Global Gospel Movement Ministry is rooted in Scripture and driven by the Great Commission, focusing on making disciples among all nations—especially the unreached. Centered on Christ and empowered by the Holy Spirit, the ministry embraces a holistic approach that integrates evangelism, discipleship, and compassionate services. It emphasizes living out the Gospel through action, raising indigenous leaders, engaging families and communities, and operating with integrity and urgency to fulfill God’s mission across cultures.
                     </p>
                   </div>
                 </div>
@@ -58,11 +60,25 @@ const History = () => {
 
               <div className="card-highlight p-6 rounded-xl">
                 <div className="flex items-start gap-4">
-                  <HistoryIcon className="h-8 w-8 text-primary mt-1" />
+                  <HistoryIcon className="h-9 w-16 text-primary mt-1" />
                   <div>
                     <h3 className="text-xl font-medium mb-2">Growth and Impact</h3>
                     <p className="text-foreground/80">
-                      Over the past 15 years, we've expanded to operate in 20 countries, built 20 schools, established 5 medical clinics, and trained over 5,000 local leaders. Our focus remains on creating lasting change through community partnership.
+                      By God’s grace, the ministry is experiencing growth and impact in three key areas: spiritually, as people in unreached regions come to Christ and discipleship movements begin; 
+                      holistically, through compassionate services like veterinary care, health, agriculture, and education that open hearts to the Gospel; and in leadership, as local believers are
+                      equipped and sent out as leaders and missionaries, sparking a new wave of mission-driven outreach.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card-highlight p-6 rounded-xl">
+                <div className="flex items-start gap-4">
+                  <Medal className="h-9 w-16 text-primary mt-1" />
+                  <div>
+                    <h3 className="text-xl font-medium mb-2">Our Success Story</h3>
+                    <p className="text-foreground/80">
+                      Since 2022, Live Message Global Gospel Movement has planted churches, reached Unreached People Groups, and mobilized believers for mission. A church was planted in Gelan Guda and four mission sites were launched among the Hammar, Bana, and Tsemay tribes in South Omo. Through short-term trips, 429 heard the Gospel, 34 came to faith, and over 120 follow-up visits were made. Holistic outreach treated 7,900 animals, reached 203 children, and supported 100+ families. We’ve trained 35 leaders and formed strategic partnerships—all to live the Gospel and multiply disciples among the unreached.
                     </p>
                   </div>
                 </div>

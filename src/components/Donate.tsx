@@ -161,9 +161,9 @@ const Donate = () => {
               </div>
             </div>
             
-            <div className="mt-8">
+            {/* <div className="mt-8">
               <a href="#" className="text-primary hover:underline">Learn more about our financials and accountability</a>
-            </div>
+            </div> */}
           </AnimatedSection>
         </div>
       </div>
