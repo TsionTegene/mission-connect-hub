@@ -86,7 +86,9 @@ const foundations = [
               </div>
             </div>
           </AnimatedSection>
-          <h2 className="section-title">Biblical Foundations</h2>
+        </div>
+        <div className="mt-12 flex flex-col md:flex-row gap-8">
+          <h2 className="section-title mx-auto text-center">Biblical Foundations</h2>
            <AnimatedSection delay={200} className="md:w-2/3">
             <div className="glass p-8 rounded-xl">
               <div className="grid md:grid-cols-2 gap-6">
@@ -99,6 +101,7 @@ const foundations = [
               </div>
             </div>
           </AnimatedSection>
+
         </div>
       </div>
     </section>
