@@ -134,7 +134,7 @@ const CompassionProjects = () => {
                   <h3 className="text-lg font-medium mb-2">{project.title}</h3>
                   <p className="text-foreground/80 text-sm mb-4">{project.description}</p>  
                   
-                  <Button variant="outline" className="w-full mt-2">Support This Project</Button>
+                  <a className="button-primary" href="#get-involved">Support This Project</a>
                 </div>
               </div>
             </AnimatedSection>

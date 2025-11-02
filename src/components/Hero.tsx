@@ -51,7 +51,7 @@ const Hero = () => {
           We live the Gospel and lead the Church to the world’s forgotten places where Christ is not yet known, and disciples are yet to be made.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{animationDelay: "900ms"}}>
-          <a href="#donate" className="button-primary">
+          <a href="#get-involved" className="button-primary">
             Support Our Mission
           </a>
           {/* <a href="#mission" className="button-outline">

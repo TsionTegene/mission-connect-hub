@@ -186,11 +186,13 @@ const Navbar = () => {
       </div>
 
       <div
-        className={cn(
-          "fixed inset-x-0 top-[72px] glass md:hidden transition-all duration-300 ease-in-out",
+          className={cn(
+          "fixed inset-x-0 top-[72px] md:hidden transition-all duration-300 ease-in-out",
+          "bg-white/100 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg border-t border-white/10", 
           isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10 pointer-events-none"
         )}
       >
+
         <div className="p-6 space-y-4 divide-y divide-gray-200/20">
           {mainNavLinks.map((link) => (
             <Link

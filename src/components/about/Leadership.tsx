@@ -8,6 +8,7 @@ import DNImage from "../../assets/dn.jpg";
 import DDMImage from "../../assets/ddm.jpg";
 import HSImage from "../../assets/hs.jpg";
 import GTImage from "../../assets/gt.jpg";
+import YGImage from "../../assets/yg.jpg";
 const Leadership = () => {
   const leaders = [
     {
@@ -51,6 +52,12 @@ const Leadership = () => {
       title: "Mission field coordinator, short term missionary",
       bio: "Getu Tadesse brings over 30 years of church leadership, serving in administration, mentoring, and outreach. Holding a master’s in leadership, he fosters church unity, growth, and Christ-centered community impact.",
       image: GTImage,
+    },
+    {
+      name: "Yishak Getachew (BSc in Software Engineering)",
+      title: "Media team Coordinator, short term missionary",
+      bio: "Yishak Getachew is a devoted Christian and software engineer with a deep passion for mission and sharing the Gospel. He supports Live Message Ministry, a company dedicated to preaching the Gospel to the unreached, using his experience and technical skills to help them pursue excellence.",
+      image: YGImage,
     },
   ];
 
